@@ -61,7 +61,7 @@ function ProjectCard({
       exit={{ opacity: 0, y: -20 }}
       transition={{ delay: index * 0.08, duration: 0.5, type: "spring", bounce: 0.2 }}
       layout
-      className="relative w-full h-72 md:h-80 rounded-3xl overflow-hidden border border-white/5 cursor-pointer group"
+      className="relative w-full h-80 md:h-96 rounded-3xl overflow-hidden border border-white/5 cursor-pointer group"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -250,7 +250,7 @@ export default function AllProjectsPage() {
       </section>
 
       {/* ── Filter Tabs ── */}
-      <section className="relative px-4 max-w-5xl mx-auto mb-14">
+      <section className="relative px-4 max-w-6xl mx-auto mb-14">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -291,7 +291,7 @@ export default function AllProjectsPage() {
       </section>
 
       {/* ── Filter label ── */}
-      <section className="max-w-5xl mx-auto px-4 mb-8 flex items-center justify-between">
+      <section className="max-w-6xl mx-auto px-4 mb-8 flex items-center justify-between">
         <AnimatePresence mode="wait">
           <motion.p
             key={activeCategory}
@@ -320,8 +320,8 @@ export default function AllProjectsPage() {
       </section>
 
       {/* ── Project Cards — 1 per row with slide reveal ── */}
-      <section className="relative px-4 pb-32 max-w-5xl mx-auto">
-        <div className="flex flex-col gap-6">
+      <section className="relative px-4 pb-32 max-w-6xl mx-auto">
+        <div className="flex flex-col gap-10">
           <AnimatePresence mode="popLayout">
             {filtered.map((project, index) => {
               const globalIndex = projectsData.findIndex((p) => p.id === project.id);

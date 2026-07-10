@@ -66,11 +66,11 @@ function ProjectCard({ project, index, globalIndex }: { project: (typeof project
 
       {/* Card — lifts on hover, contains image layer on top + details behind */}
       <motion.div
-        animate={hovered ? { y: -8, scale: 1.01 } : { y: 0, scale: 1 }}
-        transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-10 w-full h-[440px] md:h-[500px] rounded-[2rem] overflow-hidden
+        animate={hovered ? { y: -12, scale: 1.02 } : { y: 0, scale: 1 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-10 w-full h-[400px] md:h-[460px] rounded-[2rem] overflow-hidden
           bg-[#0D1E26] border border-accent-cyan/25 hover:border-accent-cyan/55
-          shadow-[0_4px_24px_rgba(0,0,0,0.45)] hover:shadow-[0_16px_48px_rgba(0,242,254,0.14)]
+          shadow-[0_4px_24px_rgba(0,0,0,0.45)] hover:shadow-[0_24px_64px_rgba(0,242,254,0.18)]
           transition-colors duration-400"
       >
         {/* LAYER 0 — Details behind, full width, always rendered */}
@@ -88,15 +88,15 @@ function ProjectCard({ project, index, globalIndex }: { project: (typeof project
                 {project.id.replace(/-/g, " ")}
               </div>
             </div>
-            <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight">
+            <h2 className="text-3xl md:text-4xl font-black text-white leading-tight tracking-tight">
               {project.title}
             </h2>
-            <p className="text-text-secondary text-sm leading-relaxed border-l-2 border-accent-cyan/40 pl-4">
+            <p className="text-text-secondary text-base leading-relaxed border-l-2 border-accent-cyan/40 pl-4">
               {project.problem}
             </p>
             <div className="flex flex-wrap gap-2">
               {project.tech.map((t) => (
-                <span key={t} className="text-xs font-bold px-3 py-1.5 rounded-full bg-accent-cyan/12 border border-accent-cyan/25 text-accent-cyan">
+                <span key={t} className="text-sm font-bold px-4 py-2 rounded-full bg-accent-cyan/12 border border-accent-cyan/25 text-accent-cyan">
                   {t}
                 </span>
               ))}
@@ -116,7 +116,7 @@ function ProjectCard({ project, index, globalIndex }: { project: (typeof project
         {/* Even cards slide LEFT, odd cards slide RIGHT */}
         <motion.div
           animate={{ x: hovered ? (globalIndex % 2 === 0 ? "-100%" : "100%") : "0%" }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.8, ease: [0.25, 1, 0.35, 1] }}
           className="absolute inset-0 z-10 rounded-[2rem] overflow-hidden"
         >
           <div className="absolute inset-0 bg-[#080E11]">
@@ -141,10 +141,10 @@ function ProjectCard({ project, index, globalIndex }: { project: (typeof project
               </span>
               <span className="text-accent-cyan font-mono text-xs uppercase tracking-widest">{project.id.replace(/-/g, " ")}</span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight">{project.title}</h2>
+            <h2 className="text-3xl md:text-4xl font-black text-white leading-tight tracking-tight">{project.title}</h2>
             <div className="flex flex-wrap gap-2 mt-4">
               {project.tech.slice(0, 3).map((t) => (
-                <span key={t} className="text-xs px-3 py-1 rounded-full bg-black/50 border border-white/15 text-white/65 font-bold">{t}</span>
+                <span key={t} className="text-sm px-4 py-1.5 rounded-full bg-black/50 border border-white/15 text-white/65 font-bold">{t}</span>
               ))}
             </div>
           </motion.div>

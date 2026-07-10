@@ -32,52 +32,25 @@ const SPARKLES = [
 ];
 
 function ProjectCard({ project, globalIndex }: { project: (typeof projectsData)[0]; globalIndex: number }) {
-  const [hovered, setHovered] = useState(false);
+function ProjectCard({ project, globalIndex }: { project: (typeof projectsData)[0]; globalIndex: number }) {
   const slideLeft = globalIndex % 2 === 0;
 
   return (
-    <motion.div
-      className="relative w-full h-[400px] md:h-[460px] flex items-center justify-center perspective-[1200px]"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
+    <div className="relative w-full h-[400px] md:h-[460px] flex items-center justify-center perspective-[1200px]">
+      
       {/* Glitter glow behind card */}
-      <motion.div
-        animate={hovered ? { opacity: 1, scale: 1.1 } : { opacity: 0, scale: 0.95 }}
-        transition={{ duration: 0.4 }}
-        className="absolute inset-0 rounded-[2rem] pointer-events-none z-0"
+      <div className="card-glitter absolute w-[95%] h-full rounded-[2rem] pointer-events-none z-0 opacity-0 scale-95"
         style={{
           background: "radial-gradient(ellipse at 50% 50%, rgba(0,242,254,0.18) 0%, rgba(79,172,254,0.1) 50%, transparent 80%)",
           filter: "blur(20px)",
         }}
       />
 
-      {/* Sparkle dots */}
-      <AnimatePresence>
-        {hovered && SPARKLES.map((s, i) => (
-          <motion.div key={i}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: [0, 1, 0], scale: [0, 1, 0] }}
-            transition={{ delay: s.delay, duration: 0.8, repeat: Infinity, repeatDelay: 0.6 }}
-            className="absolute w-2 h-2 rounded-full bg-accent-cyan pointer-events-none z-0"
-            style={{ ...s, boxShadow: "0 0 8px 3px rgba(0,242,254,0.7)" }}
-          />
-        ))}
-      </AnimatePresence>
-
       {/* DETAILS CARD (Behind initially) */}
-      <motion.div
-        animate={{ 
-          x: hovered ? (slideLeft ? "52%" : "-52%") : "0%",
-          scale: hovered ? 1 : 0.96,
-          rotateY: hovered ? 0 : (slideLeft ? -8 : 8),
-          opacity: hovered ? 1 : 0
-        }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute w-[95%] md:w-[48%] h-full rounded-[2rem] overflow-hidden
-          bg-[#0D1E26] border border-accent-cyan/25 hover:border-accent-cyan/55
-          shadow-[0_4px_24px_rgba(0,0,0,0.45)] z-0
-          flex flex-col justify-center px-8 md:px-10 py-8"
+      <div className="card-details absolute w-[95%] md:w-[48%] h-full rounded-[2rem] overflow-hidden
+          bg-[#0D1E26] border border-accent-cyan/25 shadow-[0_4px_24px_rgba(0,0,0,0.45)] z-0
+          flex flex-col justify-center px-8 md:px-10 py-8 opacity-0 scale-95"
+          data-slide={slideLeft ? "right" : "left"} 
       >
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/2 -translate-y-1/2 left-1/4 w-64 h-64 bg-accent-cyan/8 blur-[80px] rounded-full" />
@@ -114,21 +87,12 @@ function ProjectCard({ project, globalIndex }: { project: (typeof projectsData)[
             <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
           </Link>
         </div>
-      </motion.div>
+      </div>
 
       {/* IMAGE CARD (Front initially) */}
-      <motion.div
-        animate={{ 
-          x: hovered ? (slideLeft ? "-52%" : "52%") : "0%",
-          scale: hovered ? 1 : 1.02,
-          y: hovered ? 0 : -8,
-          boxShadow: hovered 
-            ? "0 12px 32px rgba(0,0,0,0.3)" 
-            : "0 24px 64px rgba(0,242,254,0.2)"
-        }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute w-[95%] md:w-[48%] h-full rounded-[2rem] overflow-hidden
-          bg-[#080E11] border border-accent-cyan/25 z-10"
+      <div className="card-image absolute w-[95%] md:w-[48%] h-full rounded-[2rem] overflow-hidden
+          bg-[#080E11] border border-accent-cyan/25 z-10 shadow-[0_24px_64px_rgba(0,242,254,0.2)]"
+          data-slide={slideLeft ? "left" : "right"} 
       >
         <div className="absolute inset-0">
           <Image src={project.image} alt={project.title} fill
@@ -138,10 +102,9 @@ function ProjectCard({ project, globalIndex }: { project: (typeof projectsData)[
         <div className="absolute inset-0 bg-gradient-to-t from-[#080E11]/90 via-[#080E11]/20 to-transparent pointer-events-none" />
 
         {/* Resting text on image */}
-        <motion.div animate={{ opacity: hovered ? 0 : 1 }} transition={{ duration: 0.18 }}
-          className="absolute inset-0 flex flex-col justify-end p-8 pointer-events-none">
+        <div className="resting-text absolute inset-0 flex flex-col justify-end p-8 pointer-events-none">
           <p className="absolute top-6 right-8 flex items-center gap-1.5 text-white/35 text-[10px] font-mono uppercase tracking-widest">
-            <span>Hover to split</span><ArrowRight className="w-3 h-3" />
+            <span>Scroll to split</span><ArrowRight className="w-3 h-3" />
           </p>
           <div className="flex items-center gap-3 mb-3">
             <span className="w-9 h-9 rounded-full bg-accent-cyan/10 border border-accent-cyan/40 flex items-center justify-center text-accent-cyan font-mono text-xs font-bold shrink-0">
@@ -150,9 +113,9 @@ function ProjectCard({ project, globalIndex }: { project: (typeof projectsData)[
             <span className="text-accent-cyan font-mono text-xs uppercase tracking-widest">{project.id.replace(/-/g, " ")}</span>
           </div>
           <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight">{project.title}</h2>
-        </motion.div>
-      </motion.div>
-    </motion.div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -164,7 +127,6 @@ export default function AllProjectsPage() {
   const filtered = projectsData.filter((p) => activeCat.ids.includes(p.id));
 
   useGSAP(() => {
-    // Clear old triggers when filtered changes
     ScrollTrigger.getAll().forEach(t => {
       if (t.trigger === containerRef.current) t.kill();
     });
@@ -184,42 +146,84 @@ export default function AllProjectsPage() {
         filter: `blur(${i * 1.5}px)`,
         transformOrigin: "top center",
       });
+      // Ensure children are reset if category changes
+      gsap.set(card.querySelector('.card-image'), { xPercent: 0, scale: 1, boxShadow: "0 24px 64px rgba(0,242,254,0.2)" });
+      gsap.set(card.querySelector('.card-details'), { xPercent: 0, scale: 0.95, opacity: 0 });
+      gsap.set(card.querySelector('.card-glitter'), { opacity: 0, scale: 0.95 });
+      gsap.set(card.querySelector('.resting-text'), { opacity: 1 });
     });
 
-    if (N > 1) {
+    if (N > 0) {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "center center", 
-          end: `+=${N * 80}%`, // Scroll duration depends on num cards
+          end: `+=${N * 150}%`, // Longer scroll to read
           pin: true,
           scrub: 1,
           invalidateOnRefresh: true,
         }
       });
 
-      for (let step = 0; step < N - 1; step++) {
-        // Active card scales up, fades out, and moves up
-        tl.to(cards[step], {
-          y: -120,
-          scale: 1.1,
-          opacity: 0,
-          filter: "blur(10px)",
+      for (let step = 0; step < N; step++) {
+        const activeCard = cards[step];
+        const slideImageLeft = activeCard.querySelector('.card-image')?.getAttribute('data-slide') === 'left';
+        
+        // PHASE 1: SPLIT
+        tl.to(activeCard.querySelector('.card-image'), {
+          xPercent: slideImageLeft ? -54 : 54,
+          scale: 1.02,
+          boxShadow: "0 12px 32px rgba(0,242,254,0.4)",
           duration: 1,
-          ease: "power2.in",
-        }, `step${step}`);
+          ease: "power2.inOut"
+        }, `step${step}_split`);
+        
+        tl.to(activeCard.querySelector('.resting-text'), {
+          opacity: 0,
+          duration: 0.5,
+        }, `step${step}_split`);
+        
+        tl.to(activeCard.querySelector('.card-details'), {
+          xPercent: slideImageLeft ? 54 : -54,
+          scale: 1,
+          opacity: 1,
+          duration: 1,
+          ease: "power2.inOut"
+        }, `step${step}_split`);
+        
+        tl.to(activeCard.querySelector('.card-glitter'), {
+          opacity: 1,
+          scale: 1.1,
+          duration: 1,
+          ease: "power2.inOut"
+        }, `step${step}_split`);
 
-        // Remaining cards move forward in the stack
-        for (let j = step + 1; j < N; j++) {
-          const pos = j - step - 1; // 0 means it becomes the front card
-          tl.to(cards[j], {
-            scale: 1 - pos * 0.05,
-            y: pos * 30,
-            opacity: pos === 0 ? 1 : Math.max(0, 1 - pos * 0.2),
-            filter: `blur(${pos * 1.5}px)`,
+        // Give some reading time while scrolling
+        tl.to({}, {duration: 0.5}); 
+
+        // PHASE 2: OUT & NEXT (only if there are next cards)
+        if (step < N - 1) {
+          tl.to(activeCard, {
+            y: -150,
+            scale: 1.1,
+            opacity: 0,
+            filter: "blur(10px)",
             duration: 1,
-            ease: "power1.inOut",
-          }, `step${step}`);
+            ease: "power2.in",
+          }, `step${step}_out`);
+
+          // Bring remaining cards forward
+          for (let j = step + 1; j < N; j++) {
+            const pos = j - step - 1; // 0 means it becomes the front card
+            tl.to(cards[j], {
+              scale: 1 - pos * 0.05,
+              y: pos * 30,
+              opacity: pos === 0 ? 1 : Math.max(0, 1 - pos * 0.2),
+              filter: `blur(${pos * 1.5}px)`,
+              duration: 1,
+              ease: "power1.inOut",
+            }, `step${step}_out`);
+          }
         }
       }
     }

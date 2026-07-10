@@ -12,19 +12,19 @@ import { projectsData } from "@/components/ProjectsSection";
 
 // ── Category definitions ─────────────────────────────────────────────────────
 const categories = [
-  { key: "all",     label: "All Projects",     value: projectsData.length, icon: LayoutGrid,
+  { key: "all",     label: "All Projects",    value: projectsData.length, icon: LayoutGrid,
     ids: projectsData.map((p) => p.id) },
-  { key: "cv",      label: "Computer Vision",  value: 3, icon: Eye,
+  { key: "cv",      label: "Computer Vision", value: 3, icon: Eye,
     ids: ["employee-monitoring", "pest-detection", "bearing-quality-inspection"] },
-  { key: "medical", label: "Medical AI",        value: 1, icon: Activity,
+  { key: "medical", label: "Medical AI",       value: 1, icon: Activity,
     ids: ["anemia-detection"] },
-  { key: "data",    label: "Data & Analytics",  value: 3, icon: BarChart3,
+  { key: "data",    label: "Data & Analytics", value: 3, icon: BarChart3,
     ids: ["atliq-grand-hotel", "atliq-hardware-360", "sales-finance-report"] },
-  { key: "ai",      label: "AI / ML",           value: 4, icon: Brain,
+  { key: "ai",      label: "AI / ML",          value: 4, icon: Brain,
     ids: ["employee-monitoring", "pest-detection", "anemia-detection", "bearing-quality-inspection"] },
 ];
 
-// ── Single project card with slide-reveal info panel ─────────────────────────
+// ── Single project card ──────────────────────────────────────────────────────
 function ProjectCard({
   project,
   index,
@@ -35,24 +35,36 @@ function ProjectCard({
   globalIndex: number;
 }) {
   const [hovered, setHovered] = useState(false);
-
-  // Alternate: even global index → panel slides LEFT→RIGHT
-  //            odd  global index → panel slides RIGHT→LEFT
   const fromLeft = globalIndex % 2 === 0;
 
+  // Curtain-wipe animation using clipPath (much smoother than translateX)
   const panelVariants = {
-    hidden: { x: fromLeft ? "-100%" : "100%", opacity: 0.6 },
+    hidden: {
+      clipPath: fromLeft
+        ? "inset(0 100% 0 0 round 0px)"
+        : "inset(0 0 0 100% round 0px)",
+    },
     visible: {
-      x: "0%",
-      opacity: 1,
-      transition: { type: "spring" as const, stiffness: 260, damping: 28 },
+      clipPath: "inset(0 0% 0 0% round 0px)",
+      transition: { duration: 0.52, ease: [0.22, 1, 0.36, 1] as const },
     },
     exit: {
-      x: fromLeft ? "-100%" : "100%",
-      opacity: 0,
-      transition: { duration: 0.3, ease: "easeInOut" as const },
+      clipPath: fromLeft
+        ? "inset(0 100% 0 0 round 0px)"
+        : "inset(0 0 0 100% round 0px)",
+      transition: { duration: 0.32, ease: [0.64, 0, 0.78, 0] as const },
     },
   };
+
+  // Staggered children inside panel
+  const child = (i: number) => ({
+    initial: { opacity: 0, y: 14 },
+    animate: {
+      opacity: 1,
+      y: 0,
+      transition: { delay: 0.18 + i * 0.07, duration: 0.38, ease: "easeOut" as const },
+    },
+  });
 
   return (
     <motion.div
@@ -61,30 +73,39 @@ function ProjectCard({
       exit={{ opacity: 0, y: -20 }}
       transition={{ delay: index * 0.08, duration: 0.5, type: "spring", bounce: 0.2 }}
       layout
-      className="relative w-full h-80 md:h-96 rounded-3xl overflow-hidden border border-white/5 cursor-pointer group"
+      className="relative w-full h-[440px] md:h-[500px] rounded-3xl overflow-hidden border border-white/5 cursor-pointer"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* ── Background image ── */}
-      <Image
-        src={project.image}
-        alt={project.title}
-        fill
-        sizes="100vw"
-        className={`object-cover transition-all duration-700 ${
-          hovered ? "scale-110 brightness-50" : "scale-100 brightness-75"
-        }`}
-      />
+      {/* Full image — object-contain so nothing crops */}
+      <div className="absolute inset-0 bg-[#080E11] z-0">
+        <Image
+          src={project.image}
+          alt={project.title}
+          fill
+          sizes="(max-width: 768px) 100vw, 800px"
+          className={`object-contain transition-all duration-700 ease-out ${
+            hovered ? "scale-105 brightness-[0.35]" : "scale-100 brightness-90"
+          }`}
+        />
+      </div>
 
-      {/* ── Permanent dark gradient ── */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#080E11]/90 via-[#080E11]/30 to-transparent pointer-events-none z-10" />
+      {/* Bottom gradient */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#080E11]/95 via-[#080E11]/20 to-transparent z-10 pointer-events-none" />
 
-      {/* ── Always-visible content (number + title) ── */}
-      <div
-        className={`absolute inset-0 z-20 flex flex-col justify-end p-8 transition-opacity duration-300 ${
-          hovered ? "opacity-0" : "opacity-100"
-        }`}
+      {/* Resting content — fades out on hover */}
+      <motion.div
+        animate={{ opacity: hovered ? 0 : 1 }}
+        transition={{ duration: 0.18 }}
+        className="absolute inset-0 z-20 flex flex-col justify-end p-8 pointer-events-none"
       >
+        {/* Hover hint */}
+        <p className={`absolute top-6 flex items-center gap-1.5 text-white/30 text-[10px] font-mono uppercase tracking-widest ${fromLeft ? "left-8" : "right-8"}`}>
+          {fromLeft
+            ? <><span>Hover</span><ArrowRight className="w-3 h-3" /></>
+            : <><ArrowRight className="w-3 h-3 rotate-180" /><span>Hover</span></>}
+        </p>
+
         <div className="flex items-center gap-3 mb-3">
           <span className="w-9 h-9 rounded-full bg-accent-cyan/10 border border-accent-cyan/40 flex items-center justify-center text-accent-cyan font-mono text-xs font-bold shrink-0">
             {String(globalIndex + 1).padStart(2, "0")}
@@ -93,41 +114,21 @@ function ProjectCard({
             {project.id.replace(/-/g, " ")}
           </span>
         </div>
+
         <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight">
           {project.title}
         </h2>
+
         <div className="flex flex-wrap gap-2 mt-4">
           {project.tech.slice(0, 3).map((t) => (
-            <span
-              key={t}
-              className="text-xs font-bold px-3 py-1 rounded-lg bg-black/40 border border-white/10 text-white/70"
-            >
+            <span key={t} className="text-xs px-3 py-1 rounded-lg bg-black/50 border border-white/10 text-white/60 font-bold">
               {t}
             </span>
           ))}
         </div>
+      </motion.div>
 
-        {/* Hover hint arrow */}
-        <div
-          className={`absolute bottom-8 flex items-center gap-2 text-white/40 text-xs font-mono uppercase tracking-widest transition-all duration-300 ${
-            fromLeft ? "left-8" : "right-8"
-          }`}
-        >
-          {fromLeft ? (
-            <>
-              <span>Hover for details</span>
-              <ArrowRight className="w-3.5 h-3.5 animate-bounce-x" />
-            </>
-          ) : (
-            <>
-              <ArrowRight className="w-3.5 h-3.5 rotate-180 animate-bounce-x" />
-              <span>Hover for details</span>
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* ── Slide-in info panel ── */}
+      {/* Curtain-wipe info panel */}
       <AnimatePresence>
         {hovered && (
           <motion.div
@@ -136,63 +137,64 @@ function ProjectCard({
             initial="hidden"
             animate="visible"
             exit="exit"
-            className={`absolute inset-y-0 z-30 w-full md:w-[62%] flex flex-col justify-center p-8 md:p-10
-              bg-[#0B1317]/95 backdrop-blur-xl border-r-0
-              ${fromLeft
-                ? "left-0 border-r border-accent-cyan/20"
-                : "right-0 border-l border-accent-cyan/20"
-              }`}
+            className={`absolute inset-y-0 z-30 w-full md:w-[56%] flex flex-col justify-center
+              bg-[#0B1317]/97 backdrop-blur-2xl
+              ${fromLeft ? "left-0" : "right-0"}`}
           >
-            {/* Glow edge */}
-            <div
-              className={`absolute inset-y-0 w-px bg-gradient-to-b from-transparent via-accent-cyan/60 to-transparent
-                ${fromLeft ? "right-0" : "left-0"}`}
-            />
+            {/* Glowing edge */}
+            <div className={`absolute inset-y-0 w-px bg-gradient-to-b from-transparent via-accent-cyan/60 to-transparent
+              ${fromLeft ? "right-0" : "left-0"}`} />
 
-            {/* Number + category */}
-            <div className="flex items-center gap-3 mb-5">
-              <span className="w-9 h-9 rounded-full bg-accent-cyan/10 border border-accent-cyan/40 flex items-center justify-center text-accent-cyan font-mono text-xs font-bold shrink-0">
-                {String(globalIndex + 1).padStart(2, "0")}
-              </span>
-              <div className="flex items-center gap-2 text-accent-cyan font-mono text-xs uppercase tracking-widest">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>{project.id.replace(/-/g, " ")}</span>
-              </div>
-            </div>
+            {/* Soft inner glow */}
+            <div className={`absolute top-1/2 -translate-y-1/2 w-56 h-56 bg-accent-cyan/5 blur-[80px] rounded-full pointer-events-none
+              ${fromLeft ? "-left-8" : "-right-8"}`} />
 
-            {/* Title */}
-            <h2 className="text-xl md:text-2xl font-black text-white mb-4 leading-tight tracking-tight">
-              {project.title}
-            </h2>
+            <div className="relative z-10 px-8 md:px-12 py-10 flex flex-col gap-5">
 
-            {/* Problem */}
-            <p className="text-text-secondary text-sm leading-relaxed mb-6 border-l-2 border-accent-cyan/40 pl-4">
-              {project.problem}
-            </p>
-
-            {/* Tech Tags */}
-            <div className="flex flex-wrap gap-2 mb-8">
-              {project.tech.map((t) => (
-                <span
-                  key={t}
-                  className="text-xs font-bold px-3 py-1.5 rounded-lg bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan"
-                >
-                  {t}
+              {/* Badge row */}
+              <motion.div {...child(0)} className="flex items-center gap-3">
+                <span className="w-9 h-9 rounded-full bg-accent-cyan/10 border border-accent-cyan/40 flex items-center justify-center text-accent-cyan font-mono text-xs font-bold shrink-0">
+                  {String(globalIndex + 1).padStart(2, "0")}
                 </span>
-              ))}
-            </div>
+                <div className="flex items-center gap-2 text-accent-cyan font-mono text-xs uppercase tracking-widest">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  {project.id.replace(/-/g, " ")}
+                </div>
+              </motion.div>
 
-            {/* CTA */}
-            <Link
-              href={`/projects/${project.id}`}
-              className="group/btn inline-flex items-center gap-3 px-7 py-3.5 rounded-xl font-bold text-sm text-white
-                bg-gradient-to-r from-accent-cyan/20 to-accent-mint/20
-                border border-accent-cyan/50 hover:border-accent-cyan
-                transition-all duration-300 hover:shadow-[0_0_24px_rgba(0,242,254,0.25)] w-fit"
-            >
-              Explore Project
-              <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-            </Link>
+              {/* Title */}
+              <motion.h2 {...child(1)} className="text-xl md:text-2xl font-black text-white leading-tight tracking-tight">
+                {project.title}
+              </motion.h2>
+
+              {/* Problem */}
+              <motion.p {...child(2)} className="text-text-secondary text-sm leading-relaxed border-l-2 border-accent-cyan/40 pl-4">
+                {project.problem}
+              </motion.p>
+
+              {/* Tech Tags */}
+              <motion.div {...child(3)} className="flex flex-wrap gap-2">
+                {project.tech.map((t) => (
+                  <span key={t} className="text-xs font-bold px-3 py-1.5 rounded-lg bg-accent-cyan/8 border border-accent-cyan/20 text-accent-cyan">
+                    {t}
+                  </span>
+                ))}
+              </motion.div>
+
+              {/* CTA */}
+              <motion.div {...child(4)}>
+                <Link
+                  href={`/projects/${project.id}`}
+                  className="group/btn inline-flex items-center gap-3 px-7 py-3.5 rounded-xl font-bold text-sm text-white w-fit
+                    bg-gradient-to-r from-accent-cyan/15 to-accent-mint/15
+                    border border-accent-cyan/50 hover:border-accent-cyan
+                    transition-all duration-300 hover:shadow-[0_0_24px_rgba(0,242,254,0.2)]"
+                >
+                  Explore Project
+                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                </Link>
+              </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -210,14 +212,12 @@ export default function AllProjectsPage() {
   return (
     <main className="relative min-h-screen bg-transparent overflow-x-hidden">
 
-      {/* ── Header ── */}
+      {/* Header */}
       <section className="relative pt-28 pb-12 flex flex-col items-center text-center px-4">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[280px] bg-accent-cyan/8 blur-[130px] rounded-full pointer-events-none" />
 
-        <Link
-          href="/#projects"
-          className="group mb-10 inline-flex items-center gap-2 text-text-secondary hover:text-accent-cyan transition-colors duration-300 font-mono text-sm uppercase tracking-widest"
-        >
+        <Link href="/#projects"
+          className="group mb-10 inline-flex items-center gap-2 text-text-secondary hover:text-accent-cyan transition-colors duration-300 font-mono text-sm uppercase tracking-widest">
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
           Back to Portfolio
         </Link>
@@ -227,55 +227,38 @@ export default function AllProjectsPage() {
           Project Archive
         </div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
+        <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
-          className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter relative z-10"
-        >
+          className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter relative z-10">
           All{" "}
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-accent-cyan to-accent-mint">
-            Projects
-          </span>
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-accent-cyan to-accent-mint">Projects</span>
         </motion.h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
+        <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.15, ease: "easeOut" }}
-          className="mt-5 text-lg text-text-secondary font-light max-w-xl relative z-10"
-        >
+          className="mt-5 text-lg text-text-secondary font-light max-w-xl relative z-10">
           {projectsData.length} intelligent systems — hover a card to reveal details.
         </motion.p>
       </section>
 
-      {/* ── Filter Tabs ── */}
-      <section className="relative px-4 max-w-6xl mx-auto mb-14">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+      {/* Filter Tabs */}
+      <section className="relative px-4 max-w-4xl mx-auto mb-14">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3"
-        >
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           {categories.map((cat) => {
             const Icon = cat.icon;
             const isActive = activeCategory === cat.key;
             return (
-              <button
-                key={cat.key}
-                onClick={() => setActiveCategory(cat.key)}
+              <button key={cat.key} onClick={() => setActiveCategory(cat.key)}
                 className={`group relative flex flex-col items-center gap-2 px-4 py-5 rounded-2xl border transition-all duration-300 cursor-pointer
                   ${isActive
                     ? "border-accent-cyan bg-accent-cyan/10 shadow-[0_0_24px_rgba(0,242,254,0.15)]"
-                    : "border-white/8 bg-white/[0.02] hover:border-accent-cyan/40 hover:bg-accent-cyan/5"
-                  }`}
-              >
+                    : "border-white/8 bg-white/[0.02] hover:border-accent-cyan/40 hover:bg-accent-cyan/5"}`}>
                 {isActive && (
-                  <motion.div
-                    layoutId="activeTabDot"
+                  <motion.div layoutId="activeTabDot"
                     className="absolute top-3 right-3 w-2 h-2 rounded-full bg-accent-cyan"
-                    transition={{ type: "spring", bounce: 0.4 }}
-                  />
+                    transition={{ type: "spring", bounce: 0.4 }} />
                 )}
                 <Icon className={`w-5 h-5 transition-colors duration-300 ${isActive ? "text-accent-cyan" : "text-text-secondary group-hover:text-accent-cyan"}`} />
                 <span className={`text-2xl font-black tracking-tight ${isActive ? "bg-clip-text text-transparent bg-gradient-to-r from-accent-cyan to-accent-mint" : "text-white"}`}>
@@ -290,37 +273,28 @@ export default function AllProjectsPage() {
         </motion.div>
       </section>
 
-      {/* ── Filter label ── */}
-      <section className="max-w-6xl mx-auto px-4 mb-8 flex items-center justify-between">
+      {/* Filter label */}
+      <section className="max-w-4xl mx-auto px-4 mb-8 flex items-center justify-between">
         <AnimatePresence mode="wait">
-          <motion.p
-            key={activeCategory}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 10 }}
+          <motion.p key={activeCategory}
+            initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}
             transition={{ duration: 0.25 }}
-            className="text-text-secondary text-sm font-mono"
-          >
-            Showing{" "}
-            <span className="text-accent-cyan font-bold">{filtered.length}</span>{" "}
+            className="text-text-secondary text-sm font-mono">
+            Showing <span className="text-accent-cyan font-bold">{filtered.length}</span>{" "}
             {filtered.length === 1 ? "project" : "projects"}
-            {activeCategory !== "all" && (
-              <> in <span className="text-white">{activeCat.label}</span></>
-            )}
+            {activeCategory !== "all" && <> in <span className="text-white">{activeCat.label}</span></>}
           </motion.p>
           {activeCategory !== "all" && (
-            <button
-              onClick={() => setActiveCategory("all")}
-              className="text-xs font-mono text-text-secondary hover:text-accent-cyan transition-colors uppercase tracking-widest"
-            >
+            <button onClick={() => setActiveCategory("all")}
+              className="text-xs font-mono text-text-secondary hover:text-accent-cyan transition-colors uppercase tracking-widest">
               Clear filter ×
             </button>
           )}
         </AnimatePresence>
       </section>
 
-      {/* ── Project Cards — 1 per row with slide reveal ── */}
-      <section className="relative px-4 pb-32 max-w-6xl mx-auto">
+      {/* Cards — 1 per row, narrower container */}
+      <section className="relative px-4 pb-32 max-w-4xl mx-auto">
         <div className="flex flex-col gap-10">
           <AnimatePresence mode="popLayout">
             {filtered.map((project, index) => {
@@ -338,13 +312,10 @@ export default function AllProjectsPage() {
         </div>
 
         {filtered.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center py-32 text-center"
-          >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            className="flex flex-col items-center justify-center py-32 text-center">
             <LayoutGrid className="w-12 h-12 text-text-secondary mb-4" />
-            <p className="text-text-secondary text-lg">No projects in this category yet.</p>
+            <p className="text-text-secondary text-lg">No projects in this category.</p>
           </motion.div>
         )}
       </section>

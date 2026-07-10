@@ -1,26 +1,54 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-background: #080E11;
+  --color-surface: #0B1317;
+  --color-accent-cyan: #00F2FE;
+  --color-accent-mint: #4FACFE;
+  --color-accent-purple: #8B5CF6;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #9ca3af;
+  --font-sans: var(--font-outfit), sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply bg-background text-text-primary font-sans antialiased selection:bg-accent-cyan/30 selection:text-white;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--color-accent-cyan), var(--color-accent-mint));
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, var(--color-accent-mint), var(--color-accent-cyan));
+}
+
+/* Glassmorphism utility classes */
+@layer utilities {
+  .glass {
+    @apply bg-surface/50 backdrop-blur-md border border-white/5;
+  }
+  .glass-card {
+    @apply bg-surface/80 backdrop-blur-sm border border-white/10 rounded-2xl;
+  }
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-cyan to-accent-mint;
+  }
+  .bg-gradient-glow {
+    @apply absolute -inset-0.5 bg-gradient-to-r from-accent-cyan to-accent-mint blur opacity-20 rounded-2xl group-hover:opacity-40 transition duration-500;
+  }
 }

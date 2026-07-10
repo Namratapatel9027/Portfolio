@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Outfit, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { CustomCursor } from "@/components/CustomCursor";
+import { MeshBackground } from "@/components/MeshBackground";
+import { SmoothScroller } from "@/components/SmoothScroller";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const outfitFont = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
 });
 
@@ -25,9 +28,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${outfitFont.variable} ${geistMono.variable} h-full antialiased text-[14px]`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col cursor-none text-base overflow-x-clip bg-background" suppressHydrationWarning>
+        <SmoothScroller>
+          <MeshBackground />
+          <CustomCursor />
+          {children}
+        </SmoothScroller>
+      </body>
     </html>
   );
 }

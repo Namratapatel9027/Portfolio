@@ -32,7 +32,6 @@ const SPARKLES = [
 ];
 
 function ProjectCard({ project, globalIndex }: { project: (typeof projectsData)[0]; globalIndex: number }) {
-function ProjectCard({ project, globalIndex }: { project: (typeof projectsData)[0]; globalIndex: number }) {
   const slideLeft = globalIndex % 2 === 0;
 
   return (

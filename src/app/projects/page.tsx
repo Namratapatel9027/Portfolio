@@ -1,11 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Sparkles, ArrowLeft, LayoutGrid, Eye, Brain, BarChart3, Activity } from "lucide-react";
+import { ArrowRight, Sparkles, ArrowLeft, LayoutGrid } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { projectsData } from "@/components/ProjectsSection";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const categories = [
   { key: "all",     label: "All Projects",    value: projectsData.length, ids: projectsData.map((p) => p.id) },
@@ -15,7 +22,6 @@ const categories = [
   { key: "ai",      label: "AI / ML",          value: 4, ids: ["employee-monitoring", "pest-detection", "anemia-detection", "bearing-quality-inspection"] },
 ];
 
-// Random sparkle positions around the card
 const SPARKLES = [
   { top: "10%",  left: "-2%",   delay: 0 },
   { top: "80%",  left: "0%",    delay: 0.1 },
@@ -25,16 +31,12 @@ const SPARKLES = [
   { top: "103%", left: "60%",   delay: 0.12 },
 ];
 
-function ProjectCard({ project, index, globalIndex }: { project: (typeof projectsData)[0]; index: number; globalIndex: number }) {
+function ProjectCard({ project, globalIndex }: { project: (typeof projectsData)[0]; globalIndex: number }) {
   const [hovered, setHovered] = useState(false);
+  const slideLeft = globalIndex % 2 === 0;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 36 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ delay: index * 0.08, duration: 0.5, type: "spring", bounce: 0.2 }}
-      layout
       className="relative"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -45,16 +47,15 @@ function ProjectCard({ project, index, globalIndex }: { project: (typeof project
         transition={{ duration: 0.4 }}
         className="absolute inset-0 rounded-[2rem] pointer-events-none z-0"
         style={{
-          background: "radial-gradient(ellipse at 30% 50%, rgba(0,242,254,0.18) 0%, rgba(79,172,254,0.12) 50%, transparent 80%)",
-          filter: "blur(18px)",
+          background: "radial-gradient(ellipse at 50% 50%, rgba(0,242,254,0.2) 0%, rgba(79,172,254,0.1) 50%, transparent 80%)",
+          filter: "blur(20px)",
         }}
       />
 
       {/* Sparkle dots */}
       <AnimatePresence>
         {hovered && SPARKLES.map((s, i) => (
-          <motion.div
-            key={i}
+          <motion.div key={i}
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: [0, 1, 0], scale: [0, 1, 0] }}
             transition={{ delay: s.delay, duration: 0.8, repeat: Infinity, repeatDelay: 0.6 }}
@@ -64,7 +65,7 @@ function ProjectCard({ project, index, globalIndex }: { project: (typeof project
         ))}
       </AnimatePresence>
 
-      {/* Card — lifts on hover, contains image layer on top + details behind */}
+      {/* Card wrapper */}
       <motion.div
         animate={hovered ? { y: -12, scale: 1.02 } : { y: 0, scale: 1 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
@@ -73,7 +74,7 @@ function ProjectCard({ project, index, globalIndex }: { project: (typeof project
           shadow-[0_4px_24px_rgba(0,0,0,0.45)] hover:shadow-[0_24px_64px_rgba(0,242,254,0.18)]
           transition-colors duration-400"
       >
-        {/* LAYER 0 — Details behind, full width, always rendered */}
+        {/* LAYER 0: Details panel — always behind */}
         <div className="absolute inset-0 z-0 flex flex-col justify-center px-10 py-8">
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-1/2 -translate-y-1/2 left-1/4 w-64 h-64 bg-accent-cyan/8 blur-[80px] rounded-full" />
@@ -88,12 +89,15 @@ function ProjectCard({ project, index, globalIndex }: { project: (typeof project
                 {project.id.replace(/-/g, " ")}
               </div>
             </div>
+
             <h2 className="text-3xl md:text-4xl font-black text-white leading-tight tracking-tight">
               {project.title}
             </h2>
+
             <p className="text-text-secondary text-base leading-relaxed border-l-2 border-accent-cyan/40 pl-4">
               {project.problem}
             </p>
+
             <div className="flex flex-wrap gap-2">
               {project.tech.map((t) => (
                 <span key={t} className="text-sm font-bold px-4 py-2 rounded-full bg-accent-cyan/12 border border-accent-cyan/25 text-accent-cyan">
@@ -101,6 +105,7 @@ function ProjectCard({ project, index, globalIndex }: { project: (typeof project
                 </span>
               ))}
             </div>
+
             <Link href={`/projects/${project.id}`}
               className="group/btn inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-sm text-white w-fit
                 bg-gradient-to-r from-accent-cyan/18 to-accent-mint/18
@@ -112,26 +117,25 @@ function ProjectCard({ project, index, globalIndex }: { project: (typeof project
           </div>
         </div>
 
-        {/* LAYER 1 — Image slides COMPLETELY off on hover, revealing details */}
-        {/* Even cards slide LEFT, odd cards slide RIGHT */}
+        {/* LAYER 1: Image slides off on hover */}
         <motion.div
-          animate={{ x: hovered ? (globalIndex % 2 === 0 ? "-100%" : "100%") : "0%" }}
+          animate={{ x: hovered ? (slideLeft ? "-100%" : "100%") : "0%" }}
           transition={{ duration: 0.8, ease: [0.25, 1, 0.35, 1] }}
-          className="absolute inset-0 z-10 rounded-[2rem] overflow-hidden"
+          className="absolute inset-0 z-10 rounded-[2rem] overflow-hidden bg-[#080E11]"
         >
-          <div className="absolute inset-0 bg-[#080E11]">
+          <div className="absolute inset-0">
             <Image src={project.image} alt={project.title} fill
               sizes="(max-width: 768px) 100vw, 800px"
               className="object-contain" />
           </div>
           <div className="absolute inset-0 bg-gradient-to-t from-[#080E11]/90 via-[#080E11]/20 to-transparent pointer-events-none" />
 
-          {/* Resting text on image — fades as image slides away */}
+          {/* Resting text on image */}
           <motion.div animate={{ opacity: hovered ? 0 : 1 }} transition={{ duration: 0.18 }}
             className="absolute inset-0 flex flex-col justify-end p-8 pointer-events-none">
             <p className={`absolute top-6 flex items-center gap-1.5 text-white/35 text-[10px] font-mono uppercase tracking-widest
-              ${globalIndex % 2 === 0 ? "right-8" : "left-8"}`}>
-              {globalIndex % 2 === 0
+              ${slideLeft ? "right-8" : "left-8"}`}>
+              {slideLeft
                 ? <><ArrowRight className="w-3 h-3 rotate-180" /><span>Hover to reveal</span></>
                 : <><span>Hover to reveal</span><ArrowRight className="w-3 h-3" /></>}
             </p>
@@ -156,8 +160,72 @@ function ProjectCard({ project, index, globalIndex }: { project: (typeof project
 
 export default function AllProjectsPage() {
   const [activeCategory, setActiveCategory] = useState("all");
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const activeCat = categories.find((c) => c.key === activeCategory)!;
   const filtered = projectsData.filter((p) => activeCat.ids.includes(p.id));
+
+  useGSAP(() => {
+    // Clear old triggers when filtered changes
+    ScrollTrigger.getAll().forEach(t => {
+      if (t.trigger === containerRef.current) t.kill();
+    });
+
+    const cards = gsap.utils.toArray<HTMLElement>('.project-card-3d');
+    if (!containerRef.current || cards.length === 0) return;
+
+    const N = cards.length;
+
+    // Initial setup: stack them visually
+    cards.forEach((card, i) => {
+      gsap.set(card, {
+        scale: 1 - i * 0.05,
+        y: i * 30, // Each card is slightly lower
+        zIndex: N - i, // Top card has highest z-index
+        opacity: i === 0 ? 1 : Math.max(0, 1 - i * 0.2),
+        filter: `blur(${i * 1.5}px)`,
+        transformOrigin: "top center",
+      });
+    });
+
+    if (N > 1) {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "center center", 
+          end: `+=${N * 80}%`, // Scroll duration depends on num cards
+          pin: true,
+          scrub: 1,
+          invalidateOnRefresh: true,
+        }
+      });
+
+      for (let step = 0; step < N - 1; step++) {
+        // Active card scales up, fades out, and moves up
+        tl.to(cards[step], {
+          y: -120,
+          scale: 1.1,
+          opacity: 0,
+          filter: "blur(10px)",
+          duration: 1,
+          ease: "power2.in",
+        }, `step${step}`);
+
+        // Remaining cards move forward in the stack
+        for (let j = step + 1; j < N; j++) {
+          const pos = j - step - 1; // 0 means it becomes the front card
+          tl.to(cards[j], {
+            scale: 1 - pos * 0.05,
+            y: pos * 30,
+            opacity: pos === 0 ? 1 : Math.max(0, 1 - pos * 0.2),
+            filter: `blur(${pos * 1.5}px)`,
+            duration: 1,
+            ease: "power1.inOut",
+          }, `step${step}`);
+        }
+      }
+    }
+  }, { dependencies: [filtered] });
 
   return (
     <main className="relative min-h-screen bg-transparent overflow-x-hidden">
@@ -193,7 +261,7 @@ export default function AllProjectsPage() {
         </motion.p>
       </section>
 
-      {/* Filter Tabs — no icons, glitter lift on hover */}
+      {/* Filter Tabs */}
       <section className="relative px-4 max-w-4xl mx-auto mb-14">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
@@ -252,26 +320,25 @@ export default function AllProjectsPage() {
         </AnimatePresence>
       </section>
 
-      {/* Cards — 1 per row */}
-      <section className="relative px-4 pb-32 max-w-4xl mx-auto">
-        <div className="flex flex-col gap-14">
-          <AnimatePresence mode="popLayout">
-            {filtered.map((project, index) => {
+      {/* GSAP Scroll Stacking Container */}
+      <section className="relative w-full max-w-4xl mx-auto px-4 pb-[30vh]">
+        <div ref={containerRef} className="relative w-full h-[500px] flex items-center justify-center">
+          {filtered.length > 0 ? (
+            filtered.map((project) => {
               const globalIndex = projectsData.findIndex((p) => p.id === project.id);
               return (
-                <ProjectCard key={project.id} project={project} index={index} globalIndex={globalIndex} />
+                <div key={project.id} className="project-card-3d absolute w-full top-0 left-0">
+                  <ProjectCard project={project} globalIndex={globalIndex} />
+                </div>
               );
-            })}
-          </AnimatePresence>
+            })
+          ) : (
+            <div className="flex flex-col items-center justify-center py-32 text-center">
+              <LayoutGrid className="w-12 h-12 text-text-secondary mb-4" />
+              <p className="text-text-secondary text-lg">No projects in this category.</p>
+            </div>
+          )}
         </div>
-
-        {filtered.length === 0 && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center py-32 text-center">
-            <LayoutGrid className="w-12 h-12 text-text-secondary mb-4" />
-            <p className="text-text-secondary text-lg">No projects in this category.</p>
-          </motion.div>
-        )}
       </section>
     </main>
   );

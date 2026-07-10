@@ -162,7 +162,16 @@ export function ProjectsSection() {
     }
 
     // Force layout refresh after rendering
-    gsap.delayedCall(0.2, () => ScrollTrigger.refresh(true));
+    gsap.delayedCall(0.1, () => {
+      ScrollTrigger.refresh(true);
+      
+      // Restore scroll position if returning from a project detail page
+      const savedScroll = sessionStorage.getItem(`scroll_${window.location.pathname}`);
+      if (savedScroll) {
+        window.scrollTo(0, parseInt(savedScroll, 10));
+        sessionStorage.removeItem(`scroll_${window.location.pathname}`);
+      }
+    });
 
   }, { scope: containerRef });
 
@@ -235,6 +244,7 @@ export function ProjectsSection() {
                   <div className="mt-auto">
                     <Link
                       href={`/projects/${project.id}`}
+                      onClick={() => sessionStorage.setItem(`scroll_${window.location.pathname}`, window.scrollY.toString())}
                       className="group/btn relative inline-flex items-center justify-center px-8 py-3 bg-[#11222C] border border-accent-mint/50 hover:border-accent-mint text-white font-bold rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_rgba(79,172,254,0.4)]"
                     >
                       <span className="relative z-10 flex items-center text-sm">
@@ -293,6 +303,7 @@ export function ProjectsSection() {
 
                 <Link
                   href="/projects"
+                  onClick={() => sessionStorage.setItem(`scroll_${window.location.pathname}`, window.scrollY.toString())}
                   className="group/cta relative inline-flex items-center justify-center gap-3 px-10 py-4 rounded-2xl font-bold text-base text-white overflow-hidden transition-all duration-300
                     bg-gradient-to-r from-accent-cyan/20 to-accent-mint/20
                     border border-accent-cyan/50 hover:border-accent-cyan

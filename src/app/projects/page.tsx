@@ -79,6 +79,7 @@ function ProjectCard({ project, globalIndex }: { project: (typeof projectsData)[
             ))}
           </div>
           <Link href={`/projects/${project.id}`}
+            onClick={() => sessionStorage.setItem(`scroll_${window.location.pathname}`, window.scrollY.toString())}
             className="group/btn inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-sm text-white w-fit
               bg-gradient-to-r from-accent-cyan/18 to-accent-mint/18
               border border-accent-cyan/45 hover:border-accent-cyan
@@ -228,6 +229,17 @@ export default function AllProjectsPage() {
         }
       }
     }
+    
+    // Force layout refresh and restore scroll if returning from a project detail page
+    gsap.delayedCall(0.1, () => {
+      ScrollTrigger.refresh(true);
+      const savedScroll = sessionStorage.getItem(`scroll_${window.location.pathname}`);
+      if (savedScroll) {
+        window.scrollTo(0, parseInt(savedScroll, 10));
+        sessionStorage.removeItem(`scroll_${window.location.pathname}`);
+      }
+    });
+
   }, { dependencies: [filtered] });
 
   return (

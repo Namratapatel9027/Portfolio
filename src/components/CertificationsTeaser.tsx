@@ -167,6 +167,7 @@ export function CertificationsTeaser() {
             {/* CTA Button */}
             <Link
               href="/certifications"
+              onClick={() => sessionStorage.setItem(`scroll_${window.location.pathname}`, window.scrollY.toString())}
               className="group mt-2 relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl font-bold text-base text-white overflow-hidden transition-all duration-300
                 bg-gradient-to-r from-accent-purple/20 to-accent-cyan/20
                 border border-accent-purple/50 hover:border-accent-purple

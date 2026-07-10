@@ -24,7 +24,7 @@ const categories = [
     ids: ["employee-monitoring", "pest-detection", "anemia-detection", "bearing-quality-inspection"] },
 ];
 
-// ── Single project card ──────────────────────────────────────────────────────
+// ── Project Card ─────────────────────────────────────────────────────────────
 function ProjectCard({
   project,
   index,
@@ -35,169 +35,153 @@ function ProjectCard({
   globalIndex: number;
 }) {
   const [hovered, setHovered] = useState(false);
-  const fromLeft = globalIndex % 2 === 0;
-
-  // Curtain-wipe animation using clipPath (much smoother than translateX)
-  const panelVariants = {
-    hidden: {
-      clipPath: fromLeft
-        ? "inset(0 100% 0 0 round 0px)"
-        : "inset(0 0 0 100% round 0px)",
-    },
-    visible: {
-      clipPath: "inset(0 0% 0 0% round 0px)",
-      transition: { duration: 0.52, ease: [0.22, 1, 0.36, 1] as const },
-    },
-    exit: {
-      clipPath: fromLeft
-        ? "inset(0 100% 0 0 round 0px)"
-        : "inset(0 0 0 100% round 0px)",
-      transition: { duration: 0.32, ease: [0.64, 0, 0.78, 0] as const },
-    },
-  };
-
-  // Staggered children inside panel
-  const child = (i: number) => ({
-    initial: { opacity: 0, y: 14 },
-    animate: {
-      opacity: 1,
-      y: 0,
-      transition: { delay: 0.18 + i * 0.07, duration: 0.38, ease: "easeOut" as const },
-    },
-  });
+  // Even cards: image slides LEFT, details emerge from right
+  // Odd cards:  image slides RIGHT, details emerge from left
+  const slideDir = globalIndex % 2 === 0 ? -1 : 1;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 48 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ delay: index * 0.08, duration: 0.5, type: "spring", bounce: 0.2 }}
+      exit={{ opacity: 0, y: -24 }}
+      transition={{ delay: index * 0.09, duration: 0.55, type: "spring", bounce: 0.18 }}
       layout
-      className="relative w-full h-[440px] md:h-[500px] rounded-3xl overflow-hidden border border-white/5 cursor-pointer"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      // Card: visible border, very rounded
+      className="relative w-full h-[440px] md:h-[500px] rounded-[2rem] overflow-hidden
+        border border-accent-cyan/25 hover:border-accent-cyan/60
+        shadow-[0_4px_32px_rgba(0,0,0,0.4)]
+        hover:shadow-[0_8px_48px_rgba(0,242,254,0.12)]
+        transition-shadow duration-500 cursor-pointer"
+      style={{ perspective: "1200px" }}
     >
-      {/* Full image — object-contain so nothing crops */}
-      <div className="absolute inset-0 bg-[#080E11] z-0">
-        <Image
-          src={project.image}
-          alt={project.title}
-          fill
-          sizes="(max-width: 768px) 100vw, 800px"
-          className={`object-contain transition-all duration-700 ease-out ${
-            hovered ? "scale-105 brightness-[0.35]" : "scale-100 brightness-90"
-          }`}
-        />
-      </div>
+      {/* ─── LAYER 1: Details panel — always "behind" the image ─── */}
+      <div className="absolute inset-0 bg-[#0A1920] rounded-[2rem] z-0 flex items-center">
 
-      {/* Bottom gradient */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#080E11]/95 via-[#080E11]/20 to-transparent z-10 pointer-events-none" />
+        {/* Ambient glow inside details */}
+        <div className={`absolute w-72 h-72 rounded-full blur-[100px] opacity-30 pointer-events-none
+          ${slideDir === -1 ? "right-0 bg-accent-mint/30" : "left-0 bg-accent-cyan/30"}`} />
 
-      {/* Resting content — fades out on hover */}
-      <motion.div
-        animate={{ opacity: hovered ? 0 : 1 }}
-        transition={{ duration: 0.18 }}
-        className="absolute inset-0 z-20 flex flex-col justify-end p-8 pointer-events-none"
-      >
-        {/* Hover hint */}
-        <p className={`absolute top-6 flex items-center gap-1.5 text-white/30 text-[10px] font-mono uppercase tracking-widest ${fromLeft ? "left-8" : "right-8"}`}>
-          {fromLeft
-            ? <><span>Hover</span><ArrowRight className="w-3 h-3" /></>
-            : <><ArrowRight className="w-3 h-3 rotate-180" /><span>Hover</span></>}
-        </p>
-
-        <div className="flex items-center gap-3 mb-3">
-          <span className="w-9 h-9 rounded-full bg-accent-cyan/10 border border-accent-cyan/40 flex items-center justify-center text-accent-cyan font-mono text-xs font-bold shrink-0">
-            {String(globalIndex + 1).padStart(2, "0")}
-          </span>
-          <span className="text-accent-cyan font-mono text-xs uppercase tracking-widest">
-            {project.id.replace(/-/g, " ")}
-          </span>
-        </div>
-
-        <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight">
-          {project.title}
-        </h2>
-
-        <div className="flex flex-wrap gap-2 mt-4">
-          {project.tech.slice(0, 3).map((t) => (
-            <span key={t} className="text-xs px-3 py-1 rounded-lg bg-black/50 border border-white/10 text-white/60 font-bold">
-              {t}
-            </span>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* Curtain-wipe info panel */}
-      <AnimatePresence>
-        {hovered && (
-          <motion.div
-            key="panel"
-            variants={panelVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className={`absolute inset-y-0 z-30 w-full md:w-[56%] flex flex-col justify-center
-              bg-[#0B1317]/97 backdrop-blur-2xl
-              ${fromLeft ? "left-0" : "right-0"}`}
-          >
-            {/* Glowing edge */}
-            <div className={`absolute inset-y-0 w-px bg-gradient-to-b from-transparent via-accent-cyan/60 to-transparent
-              ${fromLeft ? "right-0" : "left-0"}`} />
-
-            {/* Soft inner glow */}
-            <div className={`absolute top-1/2 -translate-y-1/2 w-56 h-56 bg-accent-cyan/5 blur-[80px] rounded-full pointer-events-none
-              ${fromLeft ? "-left-8" : "-right-8"}`} />
-
-            <div className="relative z-10 px-8 md:px-12 py-10 flex flex-col gap-5">
-
-              {/* Badge row */}
-              <motion.div {...child(0)} className="flex items-center gap-3">
-                <span className="w-9 h-9 rounded-full bg-accent-cyan/10 border border-accent-cyan/40 flex items-center justify-center text-accent-cyan font-mono text-xs font-bold shrink-0">
+        <AnimatePresence>
+          {hovered && (
+            <motion.div
+              key="details"
+              // "From the back" — starts small + blurry (feels like depth/far away)
+              initial={{ scale: 0.88, opacity: 0, filter: "blur(8px)" }}
+              animate={{ scale: 1,    opacity: 1, filter: "blur(0px)" }}
+              exit={{    scale: 0.92, opacity: 0, filter: "blur(6px)" }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              className="relative z-10 w-full px-8 md:px-12 py-10 flex flex-col gap-5"
+            >
+              {/* Badge */}
+              <div className="flex items-center gap-3">
+                <span className="w-10 h-10 rounded-full bg-accent-cyan/15 border border-accent-cyan/50 flex items-center justify-center text-accent-cyan font-mono text-xs font-bold shrink-0 shadow-[0_0_12px_rgba(0,242,254,0.25)]">
                   {String(globalIndex + 1).padStart(2, "0")}
                 </span>
                 <div className="flex items-center gap-2 text-accent-cyan font-mono text-xs uppercase tracking-widest">
                   <Sparkles className="w-3.5 h-3.5" />
                   {project.id.replace(/-/g, " ")}
                 </div>
-              </motion.div>
+              </div>
 
               {/* Title */}
-              <motion.h2 {...child(1)} className="text-xl md:text-2xl font-black text-white leading-tight tracking-tight">
+              <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight">
                 {project.title}
-              </motion.h2>
+              </h2>
 
               {/* Problem */}
-              <motion.p {...child(2)} className="text-text-secondary text-sm leading-relaxed border-l-2 border-accent-cyan/40 pl-4">
+              <p className="text-text-secondary text-sm leading-relaxed border-l-2 border-accent-cyan/50 pl-4 max-w-lg">
                 {project.problem}
-              </motion.p>
+              </p>
 
               {/* Tech Tags */}
-              <motion.div {...child(3)} className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2">
                 {project.tech.map((t) => (
-                  <span key={t} className="text-xs font-bold px-3 py-1.5 rounded-lg bg-accent-cyan/8 border border-accent-cyan/20 text-accent-cyan">
+                  <span key={t}
+                    className="text-xs font-bold px-3 py-1.5 rounded-full bg-accent-cyan/15 border border-accent-cyan/30 text-accent-cyan">
                     {t}
                   </span>
                 ))}
-              </motion.div>
+              </div>
 
               {/* CTA */}
-              <motion.div {...child(4)}>
-                <Link
-                  href={`/projects/${project.id}`}
-                  className="group/btn inline-flex items-center gap-3 px-7 py-3.5 rounded-xl font-bold text-sm text-white w-fit
-                    bg-gradient-to-r from-accent-cyan/15 to-accent-mint/15
-                    border border-accent-cyan/50 hover:border-accent-cyan
-                    transition-all duration-300 hover:shadow-[0_0_24px_rgba(0,242,254,0.2)]"
-                >
-                  Explore Project
-                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                </Link>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <Link
+                href={`/projects/${project.id}`}
+                className="group/btn mt-1 inline-flex items-center gap-3 px-7 py-3.5 rounded-2xl font-bold text-sm text-white w-fit
+                  bg-gradient-to-r from-accent-cyan/25 to-accent-mint/25
+                  border border-accent-cyan/60 hover:border-accent-cyan
+                  transition-all duration-300 hover:shadow-[0_0_28px_rgba(0,242,254,0.3)]"
+              >
+                Explore Project
+                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+              </Link>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* ─── LAYER 2: Image — slides sideways on hover, revealing details behind ─── */}
+      <motion.div
+        animate={{
+          x: hovered ? `${slideDir * 62}%` : "0%",
+          scale: hovered ? 0.96 : 1,
+        }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute inset-0 z-10 rounded-[2rem] overflow-hidden
+          border border-white/8"
+      >
+        {/* Image */}
+        <div className="absolute inset-0 bg-[#080E11]">
+          <Image
+            src={project.image}
+            alt={project.title}
+            fill
+            sizes="(max-width: 768px) 100vw, 800px"
+            className="object-contain"
+          />
+        </div>
+
+        {/* Dark gradient bottom */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#080E11]/90 via-[#080E11]/20 to-transparent pointer-events-none" />
+
+        {/* Resting text — fades out as image slides */}
+        <motion.div
+          animate={{ opacity: hovered ? 0 : 1 }}
+          transition={{ duration: 0.2 }}
+          className="absolute inset-0 flex flex-col justify-end p-8 pointer-events-none"
+        >
+          {/* Hover hint */}
+          <p className={`absolute top-6 flex items-center gap-1.5 text-white/35 text-[10px] font-mono uppercase tracking-widest
+            ${slideDir === -1 ? "right-8" : "left-8"}`}>
+            {slideDir === -1
+              ? <><ArrowRight className="w-3 h-3 rotate-180" /><span>Hover to reveal</span></>
+              : <><span>Hover to reveal</span><ArrowRight className="w-3 h-3" /></>}
+          </p>
+
+          <div className="flex items-center gap-3 mb-3">
+            <span className="w-9 h-9 rounded-full bg-accent-cyan/10 border border-accent-cyan/40 flex items-center justify-center text-accent-cyan font-mono text-xs font-bold shrink-0">
+              {String(globalIndex + 1).padStart(2, "0")}
+            </span>
+            <span className="text-accent-cyan font-mono text-xs uppercase tracking-widest">
+              {project.id.replace(/-/g, " ")}
+            </span>
+          </div>
+
+          <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight">
+            {project.title}
+          </h2>
+
+          <div className="flex flex-wrap gap-2 mt-4">
+            {project.tech.slice(0, 3).map((t) => (
+              <span key={t}
+                className="text-xs px-3 py-1 rounded-full bg-black/50 border border-white/15 text-white/65 font-bold">
+                {t}
+              </span>
+            ))}
+          </div>
+        </motion.div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -222,7 +206,7 @@ export default function AllProjectsPage() {
           Back to Portfolio
         </Link>
 
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent-cyan/30 bg-accent-cyan/5 text-accent-cyan font-mono text-xs uppercase tracking-widest mb-6">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent-cyan/30 bg-accent-cyan/8 text-accent-cyan font-mono text-xs uppercase tracking-widest mb-6">
           <LayoutGrid className="w-3.5 h-3.5" />
           Project Archive
         </div>
@@ -241,7 +225,7 @@ export default function AllProjectsPage() {
         </motion.p>
       </section>
 
-      {/* Filter Tabs */}
+      {/* ── Filter Tabs — more visible colors ── */}
       <section className="relative px-4 max-w-4xl mx-auto mb-14">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
@@ -253,18 +237,23 @@ export default function AllProjectsPage() {
               <button key={cat.key} onClick={() => setActiveCategory(cat.key)}
                 className={`group relative flex flex-col items-center gap-2 px-4 py-5 rounded-2xl border transition-all duration-300 cursor-pointer
                   ${isActive
-                    ? "border-accent-cyan bg-accent-cyan/10 shadow-[0_0_24px_rgba(0,242,254,0.15)]"
-                    : "border-white/8 bg-white/[0.02] hover:border-accent-cyan/40 hover:bg-accent-cyan/5"}`}>
+                    // Active: solid cyan tint, bright border, strong glow
+                    ? "border-accent-cyan bg-accent-cyan/20 shadow-[0_0_28px_rgba(0,242,254,0.2)] text-accent-cyan"
+                    // Inactive: visible dark bg with subtle border — NOT fully transparent
+                    : "border-white/20 bg-[#0E1F27] hover:border-accent-cyan/50 hover:bg-accent-cyan/10"
+                  }`}>
                 {isActive && (
                   <motion.div layoutId="activeTabDot"
-                    className="absolute top-3 right-3 w-2 h-2 rounded-full bg-accent-cyan"
+                    className="absolute top-3 right-3 w-2 h-2 rounded-full bg-accent-cyan shadow-[0_0_8px_rgba(0,242,254,0.8)]"
                     transition={{ type: "spring", bounce: 0.4 }} />
                 )}
-                <Icon className={`w-5 h-5 transition-colors duration-300 ${isActive ? "text-accent-cyan" : "text-text-secondary group-hover:text-accent-cyan"}`} />
-                <span className={`text-2xl font-black tracking-tight ${isActive ? "bg-clip-text text-transparent bg-gradient-to-r from-accent-cyan to-accent-mint" : "text-white"}`}>
+                <Icon className={`w-5 h-5 transition-colors duration-300 ${isActive ? "text-accent-cyan" : "text-white/60 group-hover:text-accent-cyan"}`} />
+                <span className={`text-2xl font-black tracking-tight ${isActive
+                  ? "bg-clip-text text-transparent bg-gradient-to-r from-accent-cyan to-accent-mint"
+                  : "text-white"}`}>
                   {cat.value}
                 </span>
-                <span className={`text-[10px] font-mono uppercase tracking-widest text-center leading-tight ${isActive ? "text-accent-cyan" : "text-text-secondary"}`}>
+                <span className={`text-[10px] font-mono uppercase tracking-widest text-center leading-tight ${isActive ? "text-accent-cyan" : "text-white/50 group-hover:text-white/80"}`}>
                   {cat.label}
                 </span>
               </button>
@@ -293,7 +282,7 @@ export default function AllProjectsPage() {
         </AnimatePresence>
       </section>
 
-      {/* Cards — 1 per row, narrower container */}
+      {/* Cards */}
       <section className="relative px-4 pb-32 max-w-4xl mx-auto">
         <div className="flex flex-col gap-10">
           <AnimatePresence mode="popLayout">

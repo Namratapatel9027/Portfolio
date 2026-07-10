@@ -9,6 +9,7 @@ import { projectsData } from "@/components/ProjectsSection";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { useRouter } from "next/navigation";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -121,6 +122,7 @@ function ProjectCard({ project, globalIndex }: { project: (typeof projectsData)[
 export default function AllProjectsPage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const containerRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const activeCat = categories.find((c) => c.key === activeCategory)!;
   const filtered = projectsData.filter((p) => activeCat.ids.includes(p.id));
@@ -235,11 +237,11 @@ export default function AllProjectsPage() {
       <section className="relative pt-28 pb-16 flex flex-col items-center text-center px-4">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-accent-cyan/10 blur-[120px] rounded-full pointer-events-none" />
 
-        <Link href="/#projects"
+        <button onClick={() => router.back()}
           className="group mb-10 inline-flex items-center gap-2 text-text-secondary hover:text-accent-cyan transition-colors duration-300 font-mono text-sm uppercase tracking-widest">
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
-          Back to Portfolio
-        </Link>
+          Back
+        </button>
 
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent-cyan/30 bg-accent-cyan/5 text-accent-cyan font-mono text-xs uppercase tracking-widest mb-6">
           <LayoutGrid className="w-3.5 h-3.5" />

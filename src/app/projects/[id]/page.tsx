@@ -5,6 +5,7 @@ import { ArrowLeft, ExternalLink, Code } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { use } from "react";
+import { useRouter } from "next/navigation";
 
 // Mock data to simulate dynamic fetching based on ID
 const projectsData: Record<string, any> = {
@@ -128,14 +129,15 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
   const resolvedParams = use(params);
   const id = resolvedParams.id;
   const project = projectsData[id] || projectsData["histopathology-ai"];
+  const router = useRouter();
 
   return (
     <main className="min-h-screen bg-background pt-24 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
-        <Link href="/#projects" className="inline-flex items-center text-text-secondary hover:text-accent-cyan transition-colors mb-12">
+        <button onClick={() => router.back()} className="inline-flex items-center text-text-secondary hover:text-accent-cyan transition-colors mb-12">
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Projects
-        </Link>
+          Back
+        </button>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -8,6 +8,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRouter } from "next/navigation";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -243,6 +244,7 @@ function CertificationsContent() {
 }
 
 export default function CertificationsPage() {
+  const router = useRouter();
   return (
     <main className="relative min-h-screen bg-transparent overflow-x-hidden">
       {/* ── Header ── */}
@@ -251,13 +253,12 @@ export default function CertificationsPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-accent-purple/10 blur-[120px] rounded-full pointer-events-none" />
 
         {/* Back link */}
-        <Link
-          href="/#certifications"
+        <button onClick={() => router.back()}
           className="group mb-10 inline-flex items-center gap-2 text-text-secondary hover:text-accent-purple transition-colors duration-300 font-mono text-sm uppercase tracking-widest"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
-          Back to Portfolio
-        </Link>
+          Back
+        </button>
 
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent-purple/30 bg-accent-purple/5 text-accent-purple font-mono text-xs uppercase tracking-widest mb-6">

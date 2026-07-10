@@ -64,70 +64,91 @@ function ProjectCard({ project, index, globalIndex }: { project: (typeof project
         ))}
       </AnimatePresence>
 
-      {/* Card */}
+      {/* Card — lifts on hover, contains image layer on top + details behind */}
       <motion.div
         animate={hovered ? { y: -8, scale: 1.01 } : { y: 0, scale: 1 }}
         transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-10 flex flex-col md:flex-row h-auto md:h-[340px] rounded-[2rem] overflow-hidden
-          bg-[#0D1E26] border border-accent-cyan/25
-          hover:border-accent-cyan/55
-          shadow-[0_4px_24px_rgba(0,0,0,0.45)]
-          hover:shadow-[0_16px_48px_rgba(0,242,254,0.14)]
+        className="relative z-10 w-full h-[440px] md:h-[500px] rounded-[2rem] overflow-hidden
+          bg-[#0D1E26] border border-accent-cyan/25 hover:border-accent-cyan/55
+          shadow-[0_4px_24px_rgba(0,0,0,0.45)] hover:shadow-[0_16px_48px_rgba(0,242,254,0.14)]
           transition-colors duration-400"
       >
-        {/* Image — left side */}
-        <div className="relative w-full md:w-[42%] h-48 md:h-full overflow-hidden shrink-0 border-b md:border-b-0 md:border-r border-white/8">
-          <div className="absolute inset-0 bg-[#080E11]">
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              sizes="(max-width: 768px) 100vw, 42vw"
-              className={`object-contain transition-transform duration-500 ${hovered ? "scale-105" : "scale-100"}`}
-            />
+        {/* LAYER 0 — Details behind, full width, always rendered */}
+        <div className="absolute inset-0 z-0 flex flex-col justify-center px-10 py-8">
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-1/2 -translate-y-1/2 left-1/4 w-64 h-64 bg-accent-cyan/8 blur-[80px] rounded-full" />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0D1E26]/60 pointer-events-none" />
-        </div>
-
-        {/* Details — right side, ALWAYS visible */}
-        <div className="flex flex-col justify-center flex-1 px-7 py-7">
-          <div className="flex items-center gap-3 mb-3">
-            <span className="w-8 h-8 rounded-full bg-accent-cyan/12 border border-accent-cyan/40 flex items-center justify-center text-accent-cyan font-mono text-xs font-bold shrink-0">
-              {String(globalIndex + 1).padStart(2, "0")}
-            </span>
-            <div className="flex items-center gap-2 text-accent-cyan font-mono text-xs uppercase tracking-widest">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>{project.id.replace(/-/g, " ")}</span>
-            </div>
-          </div>
-
-          <h2 className="text-xl md:text-2xl font-black text-white mb-3 leading-tight tracking-tight">
-            {project.title}
-          </h2>
-
-          <p className="text-text-secondary text-sm leading-relaxed mb-4 border-l-2 border-accent-cyan/40 pl-3">
-            {project.problem}
-          </p>
-
-          <div className="flex flex-wrap gap-2 mb-5">
-            {project.tech.map((t) => (
-              <span key={t} className="text-xs font-bold px-3 py-1.5 rounded-full bg-accent-cyan/10 border border-accent-cyan/25 text-accent-cyan">
-                {t}
+          <div className="relative z-10 flex flex-col gap-5 max-w-xl">
+            <div className="flex items-center gap-3">
+              <span className="w-9 h-9 rounded-full bg-accent-cyan/15 border border-accent-cyan/50 flex items-center justify-center text-accent-cyan font-mono text-xs font-bold shrink-0">
+                {String(globalIndex + 1).padStart(2, "0")}
               </span>
-            ))}
+              <div className="flex items-center gap-2 text-accent-cyan font-mono text-xs uppercase tracking-widest">
+                <Sparkles className="w-3.5 h-3.5" />
+                {project.id.replace(/-/g, " ")}
+              </div>
+            </div>
+            <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight">
+              {project.title}
+            </h2>
+            <p className="text-text-secondary text-sm leading-relaxed border-l-2 border-accent-cyan/40 pl-4">
+              {project.problem}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {project.tech.map((t) => (
+                <span key={t} className="text-xs font-bold px-3 py-1.5 rounded-full bg-accent-cyan/12 border border-accent-cyan/25 text-accent-cyan">
+                  {t}
+                </span>
+              ))}
+            </div>
+            <Link href={`/projects/${project.id}`}
+              className="group/btn inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-sm text-white w-fit
+                bg-gradient-to-r from-accent-cyan/18 to-accent-mint/18
+                border border-accent-cyan/45 hover:border-accent-cyan
+                transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,242,254,0.25)]">
+              Explore Project
+              <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+            </Link>
           </div>
-
-          <Link
-            href={`/projects/${project.id}`}
-            className="group/btn inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-sm text-white w-fit
-              bg-gradient-to-r from-accent-cyan/18 to-accent-mint/18
-              border border-accent-cyan/45 hover:border-accent-cyan
-              transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,242,254,0.25)]"
-          >
-            Explore Project
-            <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-          </Link>
         </div>
+
+        {/* LAYER 1 — Image slides COMPLETELY off on hover, revealing details */}
+        {/* Even cards slide LEFT, odd cards slide RIGHT */}
+        <motion.div
+          animate={{ x: hovered ? (globalIndex % 2 === 0 ? "-100%" : "100%") : "0%" }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-0 z-10 rounded-[2rem] overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-[#080E11]">
+            <Image src={project.image} alt={project.title} fill
+              sizes="(max-width: 768px) 100vw, 800px"
+              className="object-contain" />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#080E11]/90 via-[#080E11]/20 to-transparent pointer-events-none" />
+
+          {/* Resting text on image — fades as image slides away */}
+          <motion.div animate={{ opacity: hovered ? 0 : 1 }} transition={{ duration: 0.18 }}
+            className="absolute inset-0 flex flex-col justify-end p-8 pointer-events-none">
+            <p className={`absolute top-6 flex items-center gap-1.5 text-white/35 text-[10px] font-mono uppercase tracking-widest
+              ${globalIndex % 2 === 0 ? "right-8" : "left-8"}`}>
+              {globalIndex % 2 === 0
+                ? <><ArrowRight className="w-3 h-3 rotate-180" /><span>Hover to reveal</span></>
+                : <><span>Hover to reveal</span><ArrowRight className="w-3 h-3" /></>}
+            </p>
+            <div className="flex items-center gap-3 mb-3">
+              <span className="w-9 h-9 rounded-full bg-accent-cyan/10 border border-accent-cyan/40 flex items-center justify-center text-accent-cyan font-mono text-xs font-bold shrink-0">
+                {String(globalIndex + 1).padStart(2, "0")}
+              </span>
+              <span className="text-accent-cyan font-mono text-xs uppercase tracking-widest">{project.id.replace(/-/g, " ")}</span>
+            </div>
+            <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight">{project.title}</h2>
+            <div className="flex flex-wrap gap-2 mt-4">
+              {project.tech.slice(0, 3).map((t) => (
+                <span key={t} className="text-xs px-3 py-1 rounded-full bg-black/50 border border-white/15 text-white/65 font-bold">{t}</span>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
       </motion.div>
     </motion.div>
   );

@@ -208,7 +208,7 @@ export function ProjectsSection() {
             {featuredProjects.map((project) => (
               <div
                 key={project.id}
-                className="project-card-3d relative md:absolute top-0 w-full max-w-4xl bg-[#11222C] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row h-auto md:h-[380px] border border-white/5"
+                className="project-card-3d relative md:absolute top-0 left-0 right-0 mx-auto w-full max-w-4xl bg-[#11222C] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row h-auto md:h-[380px] border border-white/5"
                 style={{ transformOrigin: "top center" }}
               >
                 {/* Image Block */}
@@ -266,7 +266,7 @@ export function ProjectsSection() {
 
             {/* ── 4th card: "View All Projects" CTA ── */}
             <div
-              className="project-card-3d relative md:absolute top-0 w-full max-w-4xl bg-[#11222C] rounded-3xl overflow-hidden shadow-2xl h-auto md:h-[380px] border border-white/5"
+              className="project-card-3d relative md:absolute top-0 left-0 right-0 mx-auto w-full max-w-4xl bg-[#11222C] rounded-3xl overflow-hidden shadow-2xl h-auto md:h-[380px] border border-white/5"
               style={{ transformOrigin: "top center" }}
             >
               {/* Glow orbs inside the card */}

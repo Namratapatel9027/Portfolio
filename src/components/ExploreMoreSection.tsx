@@ -45,7 +45,7 @@ export function ExploreMoreSection() {
     <section id="explore" className="py-24 relative bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading 
-          title="Explore More" 
+          title={<><span className="text-white">EXPLORE</span> <span className="text-gradient">MORE</span></>} 
           subtitle="Check out my videos, professional updates, and open-source contributions." 
         />
 

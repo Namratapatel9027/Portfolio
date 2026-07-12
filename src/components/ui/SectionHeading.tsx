@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 
 interface SectionHeadingProps {
-  title: string;
+  title: React.ReactNode;
   subtitle?: string;
 }
 
@@ -15,9 +15,9 @@ export function SectionHeading({ title, subtitle }: SectionHeadingProps) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, amount: 0.1 }}
         transition={{ duration: 0.5 }}
-        className="text-[26px] md:text-[42px] font-bold tracking-tight"
+        className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter"
       >
-        <span className="text-gradient">{title}</span>
+        {title}
       </motion.h2>
       {subtitle && (
         <motion.p

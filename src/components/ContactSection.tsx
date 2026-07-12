@@ -43,7 +43,7 @@ export function ContactSection() {
     <section id="contact" className="py-24 relative bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading 
-          title="Get In Touch" 
+          title={<><span className="text-white">GET IN</span> <span className="text-gradient">TOUCH</span></>} 
           subtitle="Let's discuss how we can build intelligent solutions together." 
         />
 

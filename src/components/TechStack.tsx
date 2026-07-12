@@ -57,7 +57,7 @@ export function TechStack() {
         {/* Section Heading */}
         <div className="mb-20">
           <SectionHeading
-            title="Tech & Skills"
+            title={<><span className="text-gradient">TECH</span> <span className="text-white">&</span> <span className="text-gradient">SKILLS</span></>}
             subtitle="My core expertise, structured as a periodic table of intelligent systems."
           />
         </div>

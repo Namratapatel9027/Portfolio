@@ -68,15 +68,15 @@ export function MethodologySection() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
-            transition={{ duration: 0.6 }}
+            viewport={{ once: false, margin: "-50px" }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
           >
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[200px] bg-accent-cyan/5 blur-[100px] rounded-full pointer-events-none" />
             <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter relative z-10">
-              Engineering <span className="bg-clip-text text-transparent bg-gradient-to-r from-accent-cyan to-accent-mint">Methodology</span>
+              End-to-End <span className="bg-clip-text text-transparent bg-gradient-to-r from-accent-cyan to-accent-mint">Project Lifecycle</span>
             </h2>
             <p className="mt-6 text-xl text-text-secondary font-light max-w-2xl mx-auto relative z-10">
-              An end-to-end blueprint for transforming business requirements into scalable AI solutions.
+              A comprehensive blueprint for transforming business requirements into scalable AI solutions.
             </p>
           </motion.div>
         </div>
@@ -108,8 +108,8 @@ export function MethodologySection() {
                   <motion.div 
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: false, margin: "-100px" }}
-                    transition={{ duration: 0.5, delay: 0.1 }}
+                    viewport={{ once: false, margin: "-50px" }}
+                    transition={{ duration: 0.4, delay: 0.05, ease: "easeOut" }}
                     className="flex items-center w-full h-16 relative z-10"
                   >
                     <motion.div 
@@ -120,8 +120,8 @@ export function MethodologySection() {
                         color: ["#00F2FE", "#FFFFFF", "#00F2FE"],
                         scale: [0.8, 1.1, 1]
                       }}
-                      transition={{ duration: 0.8, delay: 0.3 }}
-                      viewport={{ once: false, margin: "-100px" }}
+                      transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+                      viewport={{ once: false, margin: "-50px" }}
                       className="w-16 h-16 rounded-full border-2 border-accent-cyan flex items-center justify-center shrink-0 relative z-20"
                     >
                       <step.icon size={24} />
@@ -132,8 +132,8 @@ export function MethodologySection() {
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, margin: "-100px" }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
+                    viewport={{ once: false, margin: "-50px" }}
+                    transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
                     className="pl-20 pt-6"
                   >
                     <p className="text-[11px] font-mono font-bold text-text-secondary tracking-widest uppercase mb-2">{step.step}</p>
@@ -150,8 +150,8 @@ export function MethodologySection() {
                       <motion.div 
                         initial={{ opacity: 0, x: -50 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: false, margin: "-150px" }}
-                        transition={{ duration: 0.7, ease: "easeOut" }}
+                        viewport={{ once: false, margin: "-50px" }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
                         className="flex items-center w-full h-16 relative"
                       >
                         <motion.div 
@@ -162,8 +162,8 @@ export function MethodologySection() {
                             color: ["#00F2FE", "#FFFFFF", "#00F2FE"],
                             scale: [0.8, 1.15, 1]
                           }}
-                          transition={{ duration: 0.8, delay: 0.3 }}
-                          viewport={{ once: false, margin: "-150px" }}
+                          transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+                          viewport={{ once: false, margin: "-50px" }}
                           className="w-16 h-16 rounded-full border-2 border-accent-cyan flex items-center justify-center shrink-0 hover:scale-110 transition-transform duration-300"
                         >
                           <step.icon size={24} />
@@ -175,8 +175,8 @@ export function MethodologySection() {
                       <motion.div 
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false, margin: "-150px" }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
+                        viewport={{ once: false, margin: "-50px" }}
+                        transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
                         className="flex justify-end mt-8 pr-16"
                       >
                         <div className="max-w-[380px] text-right">
@@ -194,8 +194,8 @@ export function MethodologySection() {
                         <motion.div 
                           initial={{ opacity: 0, x: 50 }}
                           whileInView={{ opacity: 1, x: 0 }}
-                          viewport={{ once: false, margin: "-150px" }}
-                          transition={{ duration: 0.7, ease: "easeOut" }}
+                          viewport={{ once: false, margin: "-50px" }}
+                          transition={{ duration: 0.4, ease: "easeOut" }}
                           className="flex items-center w-full h-16 relative"
                         >
                           <div className="w-4 h-4 rounded-full bg-accent-cyan absolute left-[-8px] shadow-[0_0_15px_rgba(0,242,254,0.8)] border-4 border-[#080E11]" />
@@ -208,8 +208,8 @@ export function MethodologySection() {
                               color: ["#00F2FE", "#FFFFFF", "#00F2FE"],
                               scale: [0.8, 1.15, 1]
                             }}
-                            transition={{ duration: 0.8, delay: 0.3 }}
-                            viewport={{ once: false, margin: "-150px" }}
+                            transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+                            viewport={{ once: false, margin: "-50px" }}
                             className="w-16 h-16 rounded-full border-2 border-accent-cyan flex items-center justify-center shrink-0 hover:scale-110 transition-transform duration-300"
                           >
                             <step.icon size={24} />
@@ -219,8 +219,8 @@ export function MethodologySection() {
                         <motion.div 
                           initial={{ opacity: 0, y: 20 }}
                           whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: false, margin: "-150px" }}
-                          transition={{ duration: 0.6, delay: 0.2 }}
+                          viewport={{ once: false, margin: "-50px" }}
+                          transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
                           className="flex justify-start mt-8 pl-16"
                         >
                           <div className="max-w-[380px] text-left">

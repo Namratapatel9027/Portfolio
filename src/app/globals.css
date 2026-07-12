@@ -52,3 +52,41 @@ html {
     @apply absolute -inset-0.5 bg-gradient-to-r from-accent-cyan to-accent-mint blur opacity-20 rounded-2xl group-hover:opacity-40 transition duration-500;
   }
 }
+
+/* Navbar Shimmer Hover Effect */
+.shimmer-nav-link {
+  text-decoration: none;
+  position: relative;
+  transition: color 0.5s ease;
+}
+
+.shimmer-nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #A6A6A6, transparent);
+  background-size: 300% 100%;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.shimmer-nav-link:hover {
+  color: #A6A6A6;
+}
+
+.shimmer-nav-link:hover::after {
+  opacity: 1;
+  animation: shimmer111 2s linear infinite !important;
+}
+
+@keyframes shimmer111 {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

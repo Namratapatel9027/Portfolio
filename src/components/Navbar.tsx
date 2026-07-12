@@ -10,10 +10,11 @@ export function Navbar() {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "About", href: "#about" },
-    { name: "Projects", href: "#projects" },
-    { name: "Experience", href: "#experience" },
-    { name: "Contact", href: "#contact" },
+    { name: "About", href: "/#about" },
+    { name: "Projects", href: "/projects" },
+    { name: "Experience", href: "/#experience" },
+    { name: "Certifications", href: "/certifications" },
+    { name: "Contact", href: "/#contact" },
   ];
 
   return (
@@ -31,8 +32,11 @@ export function Navbar() {
             >
               NAMRATA.
             </button>
-            <div className="hidden sm:flex items-center space-x-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-text-secondary">
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.6)]" />
+            <div className="hidden sm:flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/10 border border-green-500/30 text-sm font-bold text-white shadow-[0_0_15px_rgba(34,197,94,0.15)]">
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500 shadow-[0_0_12px_rgba(34,197,94,1)]"></span>
+              </span>
               <span>Available for new opportunities</span>
             </div>
           </div>
@@ -42,7 +46,7 @@ export function Navbar() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="text-text-secondary hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="shimmer-nav-link text-text-secondary px-3 py-2 text-sm font-medium"
                 >
                   {link.name}
                 </Link>
@@ -73,7 +77,7 @@ export function Navbar() {
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="text-text-secondary hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                className="shimmer-nav-link text-text-secondary block px-3 py-2 text-base font-medium w-fit"
               >
                 {link.name}
               </Link>

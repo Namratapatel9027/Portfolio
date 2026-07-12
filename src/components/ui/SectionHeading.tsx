@@ -15,7 +15,7 @@ export function SectionHeading({ title, subtitle }: SectionHeadingProps) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, amount: 0.1 }}
         transition={{ duration: 0.5 }}
-        className="text-3xl md:text-5xl font-bold tracking-tight"
+        className="text-[26px] md:text-[42px] font-bold tracking-tight"
       >
         <span className="text-gradient">{title}</span>
       </motion.h2>

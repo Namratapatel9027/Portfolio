@@ -1,12 +1,16 @@
 "use client";
 
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Download } from "lucide-react";
 import Link from "next/link";
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { projectsData } from "./ProjectsSection";
 import { experiences } from "./ExperienceTimeline";
 import { publications } from "./PublicationsSection";
+
+const FULL_NAME = "NAMRATA";
+const LETTERS = FULL_NAME.split("");
+const COMBINED_WORDS = ["NAMRATA", "PATEL"];
 
 const ROLES = [
   "AI/ML Engineer",
@@ -17,8 +21,6 @@ const ROLES = [
 
 export function HeroSection() {
   const [visitorCount, setVisitorCount] = useState<number | null>(null);
-
-  // Word-reveal role cycling
   const [roleIndex, setRoleIndex] = useState(0);
 
   useEffect(() => {
@@ -28,10 +30,8 @@ export function HeroSection() {
     return () => clearInterval(interval);
   }, []);
 
-
   useEffect(() => {
     try {
-      // Use local storage to simulate a reliable visitor counter without relying on unstable external APIs
       const storedCount = localStorage.getItem("portfolio_visitor_count");
       let count = storedCount ? parseInt(storedCount, 10) : Math.floor(Math.random() * 500) + 1500;
       count += 1;
@@ -39,77 +39,211 @@ export function HeroSection() {
       setVisitorCount(count);
     } catch (err) {
       console.error("Failed to access local storage:", err);
-      setVisitorCount(1542); // Fallback
+      setVisitorCount(1542);
     }
   }, []);
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
+  // Preloader sequence state
+  const [introStage, setIntroStage] = useState<"flashing" | "merged" | "complete">("flashing");
+  const [currentLetterIndex, setCurrentLetterIndex] = useState(0);
 
-  const textScale = useTransform(scrollYProgress, [0, 1], [1, 1.5]);
-  const textOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const yPos = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    let fluidInstance: any;
+    if (canvasRef.current) {
+      import("webgl-fluid-enhanced").then(({ default: WebGLFluidEnhanced }) => {
+        fluidInstance = new WebGLFluidEnhanced(canvasRef.current as HTMLCanvasElement);
+        fluidInstance.setConfig({
+          simResolution: 128,
+          dyeResolution: 1024,
+          densityDissipation: 3,
+          velocityDissipation: 0.98,
+          pressure: 0.8,
+          curl: 20,
+          splatRadius: 0.2,
+          shading: false,
+          colorful: false,
+          colorPalette: ["#ffffff"],
+          hover: true,
+          backgroundColor: "transparent",
+          transparent: true,
+          bloom: true,
+          bloomIterations: 8,
+          bloomResolution: 256,
+          bloomIntensity: 0.5,
+          bloomThreshold: 0.6,
+          bloomSoftKnee: 0.7,
+          sunrays: false,
+        });
+        fluidInstance.start();
+      });
+    }
+
+    return () => {
+      if (fluidInstance) {
+        fluidInstance.stop();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (introStage === "flashing") {
+      if (currentLetterIndex < LETTERS.length) {
+        const timer = setTimeout(() => {
+          setCurrentLetterIndex(prev => prev + 1);
+        }, 300); // Slower flash speed
+        return () => clearTimeout(timer);
+      } else {
+        setIntroStage("merged");
+      }
+    } else if (introStage === "merged") {
+      const timer = setTimeout(() => {
+        setIntroStage("complete");
+      }, 1500); // Hold full name for 1.5s
+      return () => clearTimeout(timer);
+    }
+  }, [currentLetterIndex, introStage]);
+
+  const { scrollY } = useScroll();
+
+  // Fade out hero content as we scroll down so it doesn't collide with the overlapping About section
+  const textScale = useTransform(scrollY, [0, 300], [1, 1.1]);
+  const textOpacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const yPos = useTransform(scrollY, [0, 300], [0, 100]);
 
   return (
-    <section
-      ref={containerRef}
-      className="relative min-h-[120vh] flex items-center justify-center pt-20 overflow-hidden"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex flex-col items-center text-center">
+    <section className="sticky top-0 h-screen flex items-center justify-center overflow-hidden bg-transparent -z-10">
+
+      {/* Absolute Black Overlay for Preloader */}
+      <motion.div
+        initial={{ opacity: 1 }}
+        animate={{ opacity: introStage === "flashing" ? 1 : 0 }}
+        transition={{ duration: 1.5, ease: "easeInOut" }}
+        className="fixed inset-0 z-10 bg-black pointer-events-none"
+      />
+
+      {/* Fluid Simulation Canvas */}
+      <motion.div style={{ opacity: textOpacity }} className="absolute inset-0 z-0 overflow-hidden">
+        <canvas ref={canvasRef} className="w-full h-full" />
+      </motion.div>
+
+      {/* Main Content */}
+      <motion.div style={{ opacity: textOpacity }} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-50 w-full flex flex-col items-center text-center pointer-events-none">
 
         <motion.div
-          style={{ scale: textScale, opacity: textOpacity, y: yPos }}
-          className="flex flex-col items-center space-y-6"
+          style={{ scale: textScale, y: yPos }}
+          className="flex flex-col items-center w-full mt-20"
         >
-          <motion.h1
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="text-6xl sm:text-8xl lg:text-[10rem] font-black tracking-tighter leading-none text-white uppercase"
-          >
-            Namrata <br /> Patel
-          </motion.h1>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-            style={{ perspective: "600px" }}
-            className="h-[1.5em] flex items-center justify-center"
-          >
+          {/* Title / Preloader Text (mix-blend-difference applied here so only the title interacts with fluid) */}
+          <div className="flex flex-col items-center justify-center relative h-[250px] sm:h-[300px] w-full mix-blend-difference">
             <AnimatePresence mode="wait">
-              <motion.h2
-                key={roleIndex}
-                initial={{ rotateX: 90, opacity: 0 }}
-                animate={{ rotateX: 0, opacity: 1 }}
-                exit={{ rotateX: -90, opacity: 0 }}
-                transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
-                style={{ transformOrigin: "center top", backfaceVisibility: "hidden" }}
-                className="text-2xl sm:text-4xl font-bold text-gradient tracking-wide uppercase whitespace-nowrap"
-              >
-                {ROLES[roleIndex]}
-              </motion.h2>
-            </AnimatePresence>
-          </motion.div>
+              {introStage === "flashing" && currentLetterIndex < LETTERS.length ? (
+                <motion.h1
+                  key={`letter-${currentLetterIndex}`}
+                  initial={{ opacity: 0, scale: 1.2, filter: "blur(10px)", y: 60 }}
+                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)", y: 60 }}
+                  exit={{ opacity: 0, scale: 0.8, filter: "blur(10px)", y: 60 }}
+                  transition={{ duration: 0.12 }}
+                  className="text-[140px] sm:text-[210px] font-black tracking-tighter leading-none text-white absolute uppercase z-50"
+                >
+                  {LETTERS[currentLetterIndex]}
+                </motion.h1>
+              ) : introStage === "merged" || introStage === "complete" ? (
+                <motion.div
+                  key="full-name"
+                  className="flex flex-col -space-y-5 sm:-space-y-1 items-center justify-center z-50 pointer-events-none mt-8 sm:mt-12"
+                >
+                  {COMBINED_WORDS.map((word, wIdx) => {
+                    const xStart = (wIdx === 0 ? -1 : 1) * 200;
+                    const yStart = (wIdx === 0 ? -1 : 1) * 100;
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.4 }}
-            className="text-text-secondary text-lg sm:text-xl max-w-2xl leading-relaxed mt-4"
+                    return (
+                      <motion.div
+                        key={word}
+                        className="flex"
+                      >
+                        {word.split("").map((letter, i) => (
+                          <motion.span
+                            key={i}
+                            initial={{
+                              opacity: 0,
+                              x: xStart + (Math.random() - 0.5) * 400,
+                              y: yStart + (Math.random() - 0.5) * 400,
+                              rotate: (Math.random() - 0.5) * 90,
+                              scale: 2,
+                              filter: "blur(20px)"
+                            }}
+                            animate={{
+                              opacity: 1,
+                              x: 0,
+                              y: 0,
+                              rotate: 0,
+                              scale: 1,
+                              filter: "blur(0px)"
+                            }}
+                            transition={{
+                              duration: 0.8,
+                              delay: i * 0.05 + wIdx * 0.2,
+                              type: "spring",
+                              bounce: 0.4
+                            }}
+                            className="text-[52px] sm:text-[63px] lg:text-[112px] font-black tracking-tighter leading-none text-white uppercase inline-block drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+                          >
+                            {letter}
+                          </motion.span>
+                        ))}
+                      </motion.div>
+                    );
+                  })}
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+          </div>
+
+          {/* Subheadings and Call to Actions (Fade in when complete) */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{
+              opacity: introStage === "complete" ? 1 : 0,
+              y: introStage === "complete" ? 0 : 30
+            }}
+            transition={{ duration: 1, delay: 0.3 }}
+            className="flex flex-col items-center space-y-6 mt-2 pointer-events-auto"
           >
-            Building production-grade deep learning systems for medical imaging and industrial automation. Specializing in <span className="text-white font-medium">computer vision, CNNs,</span> and <span className="text-white font-medium">Vision Transformers</span>.
-          </motion.p>
+            <div
+              style={{ perspective: "600px" }}
+              className="h-[1.5em] flex items-center justify-center mt-2"
+            >
+              <AnimatePresence mode="wait">
+                <motion.h2
+                  key={roleIndex}
+                  initial={{ rotateX: 90, opacity: 0 }}
+                  animate={{ rotateX: 0, opacity: 1 }}
+                  exit={{ rotateX: -90, opacity: 0 }}
+                  transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
+                  style={{ transformOrigin: "center top", backfaceVisibility: "hidden" }}
+                  className="text-2xl sm:text-4xl font-bold text-gradient tracking-wide uppercase whitespace-nowrap"
+                >
+                  {ROLES[roleIndex]}
+                </motion.h2>
+              </AnimatePresence>
+            </div>
+
+            <p className="text-text-secondary text-lg sm:text-xl max-w-2xl leading-relaxed mt-4">
+              Building production-grade deep learning systems for medical imaging and industrial automation. Specializing in <span className="text-white font-medium">computer vision, CNNs,</span> and <span className="text-white font-medium">Vision Transformers</span>.
+            </p>
+          </motion.div>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.6 }}
-          className="mt-12 flex flex-wrap justify-center items-center gap-6"
+          animate={{
+            opacity: introStage === "complete" ? 1 : 0,
+            y: introStage === "complete" ? 0 : 30
+          }}
+          transition={{ duration: 1, delay: 0.5 }}
+          className="mt-12 flex flex-wrap justify-center items-center gap-6 pointer-events-auto"
         >
           <Link href="#projects" className="group relative overflow-hidden px-8 py-4 rounded-full bg-white text-background font-bold transition-all duration-300 hover:scale-105 inline-flex items-center">
             <span className="relative z-10 flex items-center">
@@ -126,15 +260,14 @@ export function HeroSection() {
         {/* Minimalist Metrics */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.8 }}
-          className="mt-20 flex flex-wrap justify-center gap-4 sm:gap-8 text-sm sm:text-base font-mono text-text-secondary"
+          animate={{ opacity: introStage === "complete" ? 1 : 0 }}
+          transition={{ duration: 1, delay: 0.7 }}
+          className="mt-12 flex flex-wrap justify-center gap-4 sm:gap-8 text-sm sm:text-base font-mono text-text-secondary pointer-events-auto mb-20"
         >
           {[
             { label: "Core Projects", value: `${projectsData.length}+` },
             { label: "Experience Roles", value: `${experiences.length}` },
             { label: "Publications", value: `${publications.length}` },
-            // { label: "Accuracy Avg", value: "90%+" },
             { label: "Visitors", value: visitorCount !== null ? visitorCount.toString() : "..." },
           ].map((metric) => (
             <div key={metric.label} className="flex items-center space-x-2 bg-white/5 px-4 py-2 rounded-lg border border-white/5">
@@ -143,8 +276,7 @@ export function HeroSection() {
             </div>
           ))}
         </motion.div>
-
-      </div>
+      </motion.div>
     </section>
   );
 }

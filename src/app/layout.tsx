@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${outfitFont.variable} ${geistMono.variable} h-full antialiased text-[14px]`}
+      className={`${outfitFont.variable} ${geistMono.variable} h-full antialiased text-[16px]`}
     >
       <body className="min-h-full flex flex-col cursor-none text-base overflow-x-clip bg-background" suppressHydrationWarning>
         <SmoothScroller>

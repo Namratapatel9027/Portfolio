@@ -8,7 +8,9 @@ import { MethodologySection } from "@/components/MethodologySection";
 import { ExperienceTimeline } from "@/components/ExperienceTimeline";
 import { CertificationsTeaser } from "@/components/CertificationsTeaser";
 import { EducationSection } from "@/components/EducationSection";
+
 import { PublicationsSection } from "@/components/PublicationsSection";
+import { FunFactsSection } from "@/components/FunFactsSection";
 import { ExploreMoreSection } from "@/components/ExploreMoreSection";
 import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
@@ -17,16 +19,19 @@ export default function Home() {
   return (
     <main className="flex flex-col w-full min-h-screen bg-transparent relative z-10">
       <Navbar />
-      <HeroSection />
-      <AboutSection />
+      <div className="relative w-full">
+        <HeroSection />
+        <AboutSection />
+      </div>
       <TickerTape />
       <TechStack />
       <ExperienceTimeline />
       <ProjectsSection />
       <MethodologySection />
-      <CertificationsTeaser />
       <EducationSection />
+
       <PublicationsSection />
+      <FunFactsSection />
       <ExploreMoreSection />
       <ContactSection />
       

@@ -36,7 +36,7 @@ const backgroundVariants = {
     borderRadius: "24px",
     transition: {
       duration: 1,
-      ease: [0.22, 1, 0.36, 1] // Custom snappy easing
+      ease: [0.22, 1, 0.36, 1] as const // Custom snappy easing
     }
   }
 };
@@ -47,7 +47,7 @@ const leftColVariants = {
     x: 0,
     opacity: 1,
     filter: "blur(0px)",
-    transition: { duration: 0.8, type: "spring", bounce: 0.5 }
+    transition: { duration: 0.8, type: "spring" as const, bounce: 0.5 }
   }
 };
 
@@ -57,7 +57,7 @@ const rightColVariants = {
     x: 0,
     opacity: 1,
     filter: "blur(0px)",
-    transition: { duration: 0.8, type: "spring", bounce: 0.5 }
+    transition: { duration: 0.8, type: "spring" as const, bounce: 0.5 }
   }
 };
 

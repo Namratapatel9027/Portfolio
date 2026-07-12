@@ -62,7 +62,7 @@ export function ExploreMoreSection() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`group flex flex-col items-center justify-center p-8 rounded-3xl bg-[#0a0a0a]/80 backdrop-blur-sm border border-white/10 w-56 h-56 transition-all duration-300 shadow-[0_10px_30px_rgba(0,0,0,0.3)] ${link.bgHover}`}
+                className={`group flex flex-col items-center justify-center p-8 rounded-3xl bg-[#11222C]/80 backdrop-blur-sm border border-white/10 w-56 h-56 transition-all duration-300 shadow-[0_10px_30px_rgba(0,0,0,0.3)] ${link.bgHover}`}
               >
                 <div className={`text-text-secondary transition-colors duration-300 ${link.color} mb-6`}>
                   {link.icon}

@@ -4,6 +4,7 @@ import { AboutSection } from "@/components/AboutSection";
 import { TickerTape } from "@/components/TickerTape";
 import { TechStack } from "@/components/TechStack";
 import { ProjectsSection } from "@/components/ProjectsSection";
+import { MethodologySection } from "@/components/MethodologySection";
 import { ExperienceTimeline } from "@/components/ExperienceTimeline";
 import { CertificationsTeaser } from "@/components/CertificationsTeaser";
 import { EducationSection } from "@/components/EducationSection";
@@ -22,6 +23,7 @@ export default function Home() {
       <TechStack />
       <ExperienceTimeline />
       <ProjectsSection />
+      <MethodologySection />
       <CertificationsTeaser />
       <EducationSection />
       <PublicationsSection />

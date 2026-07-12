@@ -129,6 +129,13 @@ export default function AllProjectsPage() {
   const filtered = projectsData.filter((p) => activeCat.ids.includes(p.id));
 
   useGSAP(() => {
+    // Immediately scroll to top if we don't have a saved scroll position for this specific page
+    // This prevents a flash of being scrolled down when navigating from another long page
+    const savedScroll = sessionStorage.getItem(`scroll_${window.location.pathname}`);
+    if (!savedScroll) {
+      window.scrollTo(0, 0);
+    }
+
     ScrollTrigger.getAll().forEach(t => {
       if (t.trigger === containerRef.current) t.kill();
     });
@@ -237,6 +244,8 @@ export default function AllProjectsPage() {
       if (savedScroll) {
         window.scrollTo(0, parseInt(savedScroll, 10));
         sessionStorage.removeItem(`scroll_${window.location.pathname}`);
+      } else {
+        window.scrollTo(0, 0);
       }
     });
 

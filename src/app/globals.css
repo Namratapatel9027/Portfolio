@@ -90,3 +90,65 @@ html {
     background-position: -200% 0;
   }
 }
+
+/* Uiverse Explore Cards */
+.explore-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  line-height: 1.6;
+  transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+  text-decoration: none;
+}
+
+.explore-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  color: #ffffff;
+  background: rgba(17, 34, 44, 0.9); /* Publication card color */
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(4px);
+  transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+  z-index: 10;
+}
+
+.explore-content::before {
+  position: absolute;
+  content: "";
+  top: -4%;
+  left: 50%;
+  width: 90%;
+  height: 90%;
+  transform: translate(-50%);
+  background: rgba(17, 34, 44, 0.7);
+  z-index: -1;
+  transform-origin: bottom;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+
+
+.explore-card:hover {
+  transform: translate(0px, -16px);
+}
+
+.explore-card:hover .explore-content {
+  background: rgba(17, 34, 44, 1);
+}
+
+.explore-card:hover .explore-content::before {
+  rotate: -8deg;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+

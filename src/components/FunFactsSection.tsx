@@ -43,7 +43,7 @@ export function FunFactsSection() {
             transition={{ duration: 0.6 }}
             className="text-3xl md:text-5xl font-black text-white tracking-tighter"
           >
-            Fun <span className="bg-clip-text text-transparent bg-gradient-to-r from-accent-cyan to-accent-mint">Facts</span>
+            FUN <span className="bg-clip-text text-transparent bg-gradient-to-r from-accent-cyan to-accent-mint">FACTS</span>
           </motion.h2>
         </div>
 

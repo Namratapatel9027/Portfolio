@@ -61,7 +61,7 @@ export function MethodologySection() {
   const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section id="methodology" className="relative py-24 md:py-32 bg-transparent overflow-hidden">
+    <section id="methodology" className="relative pt-24 md:pt-32 pb-12 md:pb-16 bg-transparent overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 md:px-8">
         
         <div className="text-center mb-24 md:mb-32 relative">
@@ -101,7 +101,7 @@ export function MethodologySection() {
             const isEven = i % 2 === 0;
 
             return (
-              <div key={step.id} className="relative w-full mb-20 md:mb-32">
+              <div key={step.id} className={`relative w-full ${i === methodologySteps.length - 1 ? 'mb-0' : 'mb-20 md:mb-32'}`}>
                 
                 {/* --- MOBILE LAYOUT --- */}
                 <div className="md:hidden flex flex-col w-full">

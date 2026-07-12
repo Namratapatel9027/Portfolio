@@ -19,7 +19,7 @@ const educationDetails = [
 
 export function EducationSection() {
   return (
-    <section id="education" className="py-24 relative bg-transparent">
+    <section id="education" className="pt-12 md:pt-16 pb-24 relative bg-transparent">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="mb-16">

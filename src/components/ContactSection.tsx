@@ -152,7 +152,8 @@ export function ContactSection() {
                   loading: { backgroundColor: "#8b5cf6" }, // Rich Mauve / Purple
                 }}
                 transition={{ duration: 0.3 }}
-                className="relative w-full h-14 rounded-full flex items-center justify-center hover:cursor-pointer hover:shadow-[0_0_20px_rgba(14,165,233,0.5)] transition-shadow duration-300 outline-none overflow-hidden mt-8"
+                className="btn-17 relative w-full h-14 rounded-full flex items-center justify-center hover:cursor-pointer hover:shadow-[0_0_20px_rgba(14,165,233,0.5)] transition-shadow duration-300 outline-none overflow-hidden mt-8"
+                style={{ '--btn-fill': '#11222C', '--btn-speed': '0.35s', '--btn-skew': '-0.25' } as React.CSSProperties}
               >
                 {/* State 1 & 3: Crisp White Uppercase Text */}
                 <motion.span
@@ -163,9 +164,11 @@ export function ContactSection() {
                     y: status === 'loading' ? -20 : 0
                   }}
                   transition={{ duration: 0.25 }}
-                  className="absolute text-white font-bold font-sans uppercase tracking-widest text-sm"
+                  className="absolute text-white font-bold font-sans uppercase tracking-widest text-sm text-container w-full h-full flex items-center justify-center"
                 >
-                  {status === 'success' ? 'Message Sent!' : status === 'error' ? 'Failed to send' : 'Send Message'}
+                  <span className="text flex items-center">
+                    {status === 'success' ? 'Message Sent!' : status === 'error' ? 'Failed to send' : 'Send Message'}
+                  </span>
                 </motion.span>
                 
                 {/* State 2: Infinite Loading Spinner */}

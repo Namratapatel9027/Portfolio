@@ -15,7 +15,7 @@ export function AboutSection() {
 
   // Calculate top-to-bottom wipe percentage (0 to 100)
   // We start filling slightly after scrolling starts, and finish slightly before it ends
-  const clipPercentage = useTransform(scrollYProgress, [0.1, 0.9], [0, 100]);
+  const clipPercentage = useTransform(scrollYProgress, [0.05, 0.7], [0, 100]);
 
   // Create a dynamic CSS polygon that expands downward
   const clipPath = useMotionTemplate`polygon(0 0, 100% 0, 100% ${clipPercentage}%, 0 ${clipPercentage}%)`;

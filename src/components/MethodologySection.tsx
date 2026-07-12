@@ -72,7 +72,7 @@ export function MethodologySection() {
             transition={{ duration: 0.4, ease: "easeOut" }}
           >
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[200px] bg-accent-cyan/5 blur-[100px] rounded-full pointer-events-none" />
-            <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter relative z-10">
+            <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter relative z-10 leading-tight md:leading-[1.1] py-2">
               End-to-End <span className="bg-clip-text text-transparent bg-gradient-to-r from-accent-cyan to-accent-mint">Project Lifecycle</span>
             </h2>
             <p className="mt-6 text-xl text-text-secondary font-light max-w-2xl mx-auto relative z-10">

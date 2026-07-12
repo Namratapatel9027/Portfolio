@@ -35,18 +35,18 @@ export const MeshBackground = () => {
           ease: "linear",
         }}
       />
-      
+
       {/* Global Scrolling Watermark */}
       <div className="absolute inset-y-0 left-0 right-0 flex items-center justify-center pointer-events-none overflow-hidden">
-        <motion.div 
+        <motion.div
           animate={{ x: ["0%", "-50%"] }}
           transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
           className="flex whitespace-nowrap"
         >
-          <span className="text-[8vw] font-black text-white/10 select-none px-8">
+          <span className="text-[12vw] md:text-[8vw] font-black text-white/5 md:text-white/10 select-none px-4 md:px-8">
             CODE • PASSION • AIML • LEARN • GROW • VISION •
           </span>
-          <span className="text-[8vw] font-black text-white/10 select-none px-8">
+          <span className="text-[12vw] md:text-[8vw] font-black text-white/5 md:text-white/10 select-none px-4 md:px-8">
             CODE • PASSION • AIML • LEARN • GROW • VISION •
           </span>
         </motion.div>

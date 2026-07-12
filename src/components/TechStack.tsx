@@ -68,8 +68,8 @@ export function TechStack() {
             {elements.map((el, idx) => (
               <motion.div
                 key={el.id}
-                initial={{ opacity: 0, scale: 0.5, rotateY: 90 }}
-                whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
+                initial={{ opacity: 0, scale: 0.8, y: 50 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
                 viewport={{ once: false, amount: 0.1 }}
                 transition={{
                   duration: 0.3,

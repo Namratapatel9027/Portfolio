@@ -79,99 +79,103 @@ export function ProjectsSection() {
     const cards = gsap.utils.toArray<HTMLElement>('.project-card-3d');
     if (!containerRef.current || cards.length === 0) return;
 
-    const N = cards.length; // 4 total cards
+    const mm = gsap.matchMedia();
 
-    // Initial positioning
-    cards.forEach((card, i) => {
-      gsap.set(card, {
-        scale: 1 - i * 0.05,
-        y: i * 25,
-        x: 0,
-        rotation: 0,
-        zIndex: N - i,
-        opacity: i < 4 ? 1 - i * 0.25 : 0,
-        borderColor: i === 0 ? "rgba(0, 242, 254, 0.5)" : "rgba(255, 255, 255, 0.05)",
-        boxShadow: i === 0 ? "0 20px 50px rgba(0,242,254,0.15)" : "none",
-      });
-    });
+    mm.add("(min-width: 768px)", () => {
+      const N = cards.length; // 4 total cards
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top top",
-        end: `+=${(N - 1) * 100}%`,
-        pin: true,
-        pinSpacing: true,
-        scrub: 1,
-        invalidateOnRefresh: true,
-        refreshPriority: 1,
-      }
-    });
-
-    for (let step = 0; step < N - 1; step++) {
-      const activeIndex = step;
-
-      const isEven = activeIndex % 2 === 0;
-      const xOffset = isEven ? -800 : 800;
-      const rotationAngle = isEven ? -45 : 45;
-
-      tl.to(cards[activeIndex], {
-        x: xOffset,
-        y: -800,
-        rotation: rotationAngle,
-        scale: 1.1,
-        opacity: 0,
-        duration: 0.6,
-        ease: "power2.in"
-      }, `step${step}`);
-
-      tl.set(cards[activeIndex], {
-        y: (N - 1) * 25,
-        x: 0,
-        rotation: 0,
-        scale: 1 - (N - 1) * 0.05,
-        zIndex: -step,
-        borderColor: "rgba(255, 255, 255, 0.05)",
-        boxShadow: "none"
+      // Initial positioning
+      cards.forEach((card, i) => {
+        gsap.set(card, {
+          scale: 1 - i * 0.05,
+          y: i * 25,
+          x: 0,
+          rotation: 0,
+          zIndex: N - i,
+          opacity: i < 4 ? 1 - i * 0.25 : 0,
+          borderColor: i === 0 ? "rgba(0, 242, 254, 0.5)" : "rgba(255, 255, 255, 0.05)",
+          boxShadow: i === 0 ? "0 20px 50px rgba(0,242,254,0.15)" : "none",
+        });
       });
 
-      tl.to(cards[activeIndex], {
-        opacity: N < 4 ? 0.25 : 0,
-        duration: 0.5,
-        ease: "power1.out"
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: `+=${(N - 1) * 100}%`,
+          pin: true,
+          pinSpacing: true,
+          scrub: 1,
+          invalidateOnRefresh: true,
+          refreshPriority: 1,
+        }
       });
 
-      for (let j = 0; j < N; j++) {
-        if (j === activeIndex) continue;
+      for (let step = 0; step < N - 1; step++) {
+        const activeIndex = step;
 
-        const currentSlot = (j - step + N) % N;
-        const nextSlot = currentSlot - 1;
+        const isEven = activeIndex % 2 === 0;
+        const xOffset = isEven ? -800 : 800;
+        const rotationAngle = isEven ? -45 : 45;
 
-        if (nextSlot >= 0) {
-          tl.to(cards[j], {
-            y: nextSlot * 25,
-            scale: 1 - nextSlot * 0.05,
-            opacity: nextSlot < 4 ? 1 - nextSlot * 0.25 : 0,
-            borderColor: nextSlot === 0 ? "rgba(0, 242, 254, 0.5)" : "rgba(255, 255, 255, 0.05)",
-            boxShadow: nextSlot === 0 ? "0 20px 50px rgba(0,242,254,0.15)" : "none",
-            duration: 1,
-            ease: "power1.inOut"
-          }, `step${step}`);
+        tl.to(cards[activeIndex], {
+          x: xOffset,
+          y: -800,
+          rotation: rotationAngle,
+          scale: 1.1,
+          opacity: 0,
+          duration: 0.6,
+          ease: "power2.in"
+        }, `step${step}`);
+
+        tl.set(cards[activeIndex], {
+          y: (N - 1) * 25,
+          x: 0,
+          rotation: 0,
+          scale: 1 - (N - 1) * 0.05,
+          zIndex: -step,
+          borderColor: "rgba(255, 255, 255, 0.05)",
+          boxShadow: "none"
+        });
+
+        tl.to(cards[activeIndex], {
+          opacity: N < 4 ? 0.25 : 0,
+          duration: 0.5,
+          ease: "power1.out"
+        });
+
+        for (let j = 0; j < N; j++) {
+          if (j === activeIndex) continue;
+
+          const currentSlot = (j - step + N) % N;
+          const nextSlot = currentSlot - 1;
+
+          if (nextSlot >= 0) {
+            tl.to(cards[j], {
+              y: nextSlot * 25,
+              scale: 1 - nextSlot * 0.05,
+              opacity: nextSlot < 4 ? 1 - nextSlot * 0.25 : 0,
+              borderColor: nextSlot === 0 ? "rgba(0, 242, 254, 0.5)" : "rgba(255, 255, 255, 0.05)",
+              boxShadow: nextSlot === 0 ? "0 20px 50px rgba(0,242,254,0.15)" : "none",
+              duration: 1,
+              ease: "power1.inOut"
+            }, `step${step}`);
+          }
         }
       }
-    }
 
-    // Force layout refresh after rendering
-    gsap.delayedCall(0.1, () => {
-      ScrollTrigger.refresh(true);
-      
-      // Restore scroll position if returning from a project detail page
-      const savedScroll = sessionStorage.getItem(`scroll_${window.location.pathname}`);
-      if (savedScroll) {
-        window.scrollTo(0, parseInt(savedScroll, 10));
-        sessionStorage.removeItem(`scroll_${window.location.pathname}`);
-      }
+      // Force layout refresh after rendering
+      gsap.delayedCall(0.1, () => {
+        ScrollTrigger.refresh(true);
+      });
     });
+
+    // Restore scroll position if returning from a project detail page (works on all devices)
+    const savedScroll = sessionStorage.getItem(`scroll_${window.location.pathname}`);
+    if (savedScroll) {
+      window.scrollTo(0, parseInt(savedScroll, 10));
+      sessionStorage.removeItem(`scroll_${window.location.pathname}`);
+    }
 
   }, { scope: containerRef });
 
@@ -198,13 +202,13 @@ export function ProjectsSection() {
           </div>
 
           {/* 3D Stacking Deck Container — 3 project cards + 1 "View All" CTA card */}
-          <div className="relative w-full max-w-5xl mx-auto h-[480px] flex justify-center perspective-[2000px] px-4">
+          <div className="relative w-full max-w-5xl mx-auto h-auto md:h-[480px] flex flex-col md:block gap-8 md:gap-0 justify-center perspective-[2000px] px-4">
 
             {/* ── Featured project cards (first 3) ── */}
             {featuredProjects.map((project) => (
               <div
                 key={project.id}
-                className="project-card-3d absolute top-0 w-full max-w-4xl bg-[#11222C] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row h-auto md:h-[380px] border border-white/5"
+                className="project-card-3d relative md:absolute top-0 w-full max-w-4xl bg-[#11222C] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row h-auto md:h-[380px] border border-white/5"
                 style={{ transformOrigin: "top center" }}
               >
                 {/* Image Block */}
@@ -245,11 +249,14 @@ export function ProjectsSection() {
                     <Link
                       href={`/projects/${project.id}`}
                       onClick={() => sessionStorage.setItem(`scroll_${window.location.pathname}`, window.scrollY.toString())}
-                      className="group/btn relative inline-flex items-center justify-center px-8 py-3 bg-[#11222C] border border-accent-mint/50 hover:border-accent-mint text-white font-bold rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_rgba(79,172,254,0.4)]"
+                      className="btn-17 group/btn px-8 py-3 bg-[#11222C] border border-accent-mint/50 text-white font-bold shadow-[0_0_20px_rgba(79,172,254,0.1)]"
+                      style={{ '--btn-fill': '#00F2FE', '--btn-speed': '0.35s', '--btn-skew': '0.25' } as React.CSSProperties}
                     >
-                      <span className="relative z-10 flex items-center text-sm">
-                        Explore Project
-                        <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
+                      <span className="text-container flex items-center justify-center">
+                        <span className="text flex items-center text-sm">
+                          Explore Project
+                          <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
+                        </span>
                       </span>
                     </Link>
                   </div>
@@ -259,7 +266,7 @@ export function ProjectsSection() {
 
             {/* ── 4th card: "View All Projects" CTA ── */}
             <div
-              className="project-card-3d absolute top-0 w-full max-w-4xl bg-[#11222C] rounded-3xl overflow-hidden shadow-2xl h-auto md:h-[380px] border border-white/5"
+              className="project-card-3d relative md:absolute top-0 w-full max-w-4xl bg-[#11222C] rounded-3xl overflow-hidden shadow-2xl h-auto md:h-[380px] border border-white/5"
               style={{ transformOrigin: "top center" }}
             >
               {/* Glow orbs inside the card */}
@@ -304,14 +311,16 @@ export function ProjectsSection() {
                 <Link
                   href="/projects"
                   onClick={() => sessionStorage.setItem(`scroll_${window.location.pathname}`, window.scrollY.toString())}
-                  className="group/cta relative inline-flex items-center justify-center gap-3 px-10 py-4 rounded-2xl font-bold text-base text-white overflow-hidden transition-all duration-300
-                    bg-gradient-to-r from-accent-cyan/20 to-accent-mint/20
-                    border border-accent-cyan/50 hover:border-accent-cyan
-                    hover:shadow-[0_0_40px_rgba(0,242,254,0.3)]"
+                  className="btn-17 group/cta px-10 py-4 font-bold text-base bg-white text-black hover:text-white shadow-[0_0_40px_rgba(255,255,255,0.2)] transition-colors duration-300"
+                  style={{ '--btn-fill': '#000000', '--btn-speed': '0.45s', '--btn-skew': '-0.15' } as React.CSSProperties}
                 >
-                  <LayoutGrid className="w-5 h-5 text-accent-cyan group-hover/cta:rotate-12 transition-transform duration-300" />
-                  <span>View All Projects</span>
-                  <ArrowRight className="w-5 h-5 group-hover/cta:translate-x-1 transition-transform duration-300" />
+                  <span className="text-container flex items-center justify-center">
+                    <span className="text flex items-center gap-3">
+                      <LayoutGrid className="w-5 h-5 group-hover/cta:rotate-12 transition-transform duration-300" />
+                      View All Projects
+                      <ArrowRight className="w-5 h-5 group-hover/cta:translate-x-1 transition-transform duration-300" />
+                    </span>
+                  </span>
                 </Link>
               </div>
             </div>

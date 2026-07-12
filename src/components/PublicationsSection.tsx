@@ -134,11 +134,14 @@ export function PublicationsSection() {
                     <Link
                       href={pub.link}
                       target="_blank"
-                      className="group/btn relative inline-flex items-center justify-center px-8 py-4 bg-white text-black font-bold rounded-full overflow-hidden transition-transform hover:scale-105"
+                      className="btn-17 group/btn px-8 py-4 bg-white text-black hover:text-white font-bold shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-colors duration-300"
+                      style={{ '--btn-fill': '#000000', '--btn-speed': '0.4s', '--btn-skew': '0.3' } as React.CSSProperties}
                     >
-                      <span className="relative z-10 flex items-center">
-                        Read Paper
-                        <ExternalLink className="w-4 h-4 ml-2 group-hover/btn:-translate-y-1 group-hover/btn:translate-x-1 transition-transform" />
+                      <span className="text-container flex items-center justify-center">
+                        <span className="text flex items-center">
+                          Read Paper
+                          <ExternalLink className="w-4 h-4 ml-2 group-hover/btn:-translate-y-1 group-hover/btn:translate-x-1 transition-transform" />
+                        </span>
                       </span>
                     </Link>
                   )}

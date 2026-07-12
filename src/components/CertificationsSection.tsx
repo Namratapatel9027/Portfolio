@@ -218,9 +218,9 @@ export function CertificationsSection() {
                           href={cert.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center w-full py-3 rounded-xl bg-white/5 hover:bg-accent-purple/20 border border-white/10 hover:border-accent-purple/50 text-white transition-all font-medium"
+                          className="group inline-flex items-center justify-center w-full py-3 rounded-xl bg-white text-black hover:bg-black hover:text-white border border-transparent hover:border-white/20 transition-all duration-300 font-bold"
                         >
-                          <ExternalLink className="w-4 h-4 mr-2 text-accent-purple group-hover:text-white transition-colors" />
+                          <ExternalLink className="w-4 h-4 mr-2 text-black group-hover:text-white transition-colors duration-300" />
                           View Credential
                         </Link>
                       </div>

@@ -168,14 +168,16 @@ export function CertificationsTeaser() {
             <Link
               href="/certifications"
               onClick={() => sessionStorage.setItem(`scroll_${window.location.pathname}`, window.scrollY.toString())}
-              className="group mt-2 relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl font-bold text-base text-white overflow-hidden transition-all duration-300
-                bg-gradient-to-r from-accent-purple/20 to-accent-cyan/20
-                border border-accent-purple/50 hover:border-accent-purple
-                hover:shadow-[0_0_40px_rgba(139,92,246,0.3)]"
+              className="btn-17 group mt-2 px-8 py-4 font-bold text-base bg-white text-black hover:text-white shadow-[0_0_40px_rgba(255,255,255,0.2)] transition-colors duration-300"
+              style={{ '--btn-fill': '#000000', '--btn-speed': '0.4s', '--btn-skew': '-0.15' } as React.CSSProperties}
             >
-              <ShieldCheck className="w-5 h-5 text-accent-purple group-hover:rotate-12 transition-transform duration-300" />
-              <span>View All Certifications</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+              <span className="text-container flex items-center justify-center">
+                <span className="text flex items-center gap-3">
+                  <ShieldCheck className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+                  View All Certifications
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                </span>
+              </span>
             </Link>
           </motion.div>
         </div>

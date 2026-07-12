@@ -36,10 +36,10 @@ function ProjectCard({ project, globalIndex }: { project: (typeof projectsData)[
   const slideLeft = globalIndex % 2 === 0;
 
   return (
-    <div className="relative w-full h-[400px] md:h-[460px] flex items-center justify-center perspective-[1200px]">
+    <div className="relative w-full h-auto md:h-[460px] flex flex-col md:flex-row md:items-center md:justify-center perspective-[1200px] gap-6 md:gap-0">
       
       {/* Glitter glow behind card */}
-      <div className="card-glitter absolute w-[95%] h-full rounded-[2rem] pointer-events-none z-0 opacity-0 scale-95"
+      <div className="card-glitter absolute w-[95%] h-full rounded-[2rem] pointer-events-none z-0 hidden md:block opacity-0 scale-95"
         style={{
           background: "radial-gradient(ellipse at 50% 50%, rgba(0,242,254,0.18) 0%, rgba(79,172,254,0.1) 50%, transparent 80%)",
           filter: "blur(20px)",
@@ -47,9 +47,9 @@ function ProjectCard({ project, globalIndex }: { project: (typeof projectsData)[
       />
 
       {/* DETAILS CARD (Behind initially) */}
-      <div className="card-details absolute w-[95%] md:w-[48%] h-full rounded-[2rem] overflow-hidden
+      <div className="card-details relative md:absolute w-full md:w-[48%] h-auto md:h-full rounded-[2rem] overflow-hidden
           bg-[#0D1E26] border border-accent-cyan/25 shadow-[0_4px_24px_rgba(0,0,0,0.45)] z-0
-          flex flex-col justify-center px-8 md:px-10 py-8 opacity-0 scale-95"
+          flex flex-col justify-center px-6 md:px-10 py-8 opacity-100 md:opacity-0 scale-100 md:scale-95 order-2 md:order-none"
           data-slide={slideLeft ? "right" : "left"} 
       >
         <div className="absolute inset-0 pointer-events-none">
@@ -80,19 +80,21 @@ function ProjectCard({ project, globalIndex }: { project: (typeof projectsData)[
           </div>
           <Link href={`/projects/${project.id}`}
             onClick={() => sessionStorage.setItem(`scroll_${window.location.pathname}`, window.scrollY.toString())}
-            className="group/btn inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-sm text-white w-fit
-              bg-gradient-to-r from-accent-cyan/18 to-accent-mint/18
-              border border-accent-cyan/45 hover:border-accent-cyan
-              transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,242,254,0.25)]">
-            Explore Project
-            <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+            className="btn-17 group/btn px-6 py-3 font-bold text-sm text-white w-fit bg-gradient-to-r from-accent-cyan/18 to-accent-mint/18 border border-accent-cyan/45 shadow-[0_0_20px_rgba(0,242,254,0.1)]"
+            style={{ '--btn-fill': '#4FACFE', '--btn-speed': '0.35s', '--btn-skew': '-0.2' } as React.CSSProperties}>
+            <span className="text-container flex items-center justify-center">
+              <span className="text flex items-center gap-2">
+                Explore Project
+                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+              </span>
+            </span>
           </Link>
         </div>
       </div>
 
       {/* IMAGE CARD (Front initially) */}
-      <div className="card-image absolute w-[95%] md:w-[48%] h-full rounded-[2rem] overflow-hidden
-          bg-[#080E11] border border-accent-cyan/25 z-10 shadow-[0_24px_64px_rgba(0,242,254,0.2)]"
+      <div className="card-image relative md:absolute w-full md:w-[48%] h-[250px] md:h-full rounded-[2rem] overflow-hidden
+          bg-[#080E11] border border-accent-cyan/25 z-10 shadow-[0_24px_64px_rgba(0,242,254,0.2)] order-1 md:order-none"
           data-slide={slideLeft ? "left" : "right"} 
       >
         <div className="absolute inset-0">
@@ -100,10 +102,10 @@ function ProjectCard({ project, globalIndex }: { project: (typeof projectsData)[
             sizes="(max-width: 768px) 100vw, 400px"
             className="object-contain" />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-[#080E11]/90 via-[#080E11]/20 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#080E11]/90 via-[#080E11]/20 to-transparent pointer-events-none hidden md:block" />
 
         {/* Resting text on image */}
-        <div className="resting-text absolute inset-0 flex flex-col justify-end p-8 pointer-events-none">
+        <div className="resting-text absolute inset-0 hidden md:flex flex-col justify-end p-8 pointer-events-none">
           <p className="absolute top-6 right-8 flex items-center gap-1.5 text-white/35 text-[10px] font-mono uppercase tracking-widest">
             <span>Scroll to split</span><ArrowRight className="w-3 h-3" />
           </p>
@@ -140,102 +142,106 @@ export default function AllProjectsPage() {
       if (t.trigger === containerRef.current) t.kill();
     });
 
-    const cards = gsap.utils.toArray<HTMLElement>('.project-card-3d');
-    if (!containerRef.current || cards.length === 0) return;
+    const mm = gsap.matchMedia();
 
-    const N = cards.length;
+    mm.add("(min-width: 768px)", () => {
+      const cards = gsap.utils.toArray<HTMLElement>('.project-card-3d');
+      if (!containerRef.current || cards.length === 0) return;
 
-    // Initial setup: stack them visually
-    cards.forEach((card, i) => {
-      gsap.set(card, {
-        scale: 1 - i * 0.05,
-        y: i * 30, // Each card is slightly lower
-        zIndex: N - i, // Top card has highest z-index
-        opacity: i === 0 ? 1 : Math.max(0, 1 - i * 0.2),
-        filter: `blur(${i * 1.5}px)`,
-        transformOrigin: "top center",
-      });
-      // Ensure children are reset if category changes
-      gsap.set(card.querySelector('.card-image'), { xPercent: 0, scale: 1, boxShadow: "0 24px 64px rgba(0,242,254,0.2)" });
-      gsap.set(card.querySelector('.card-details'), { xPercent: 0, scale: 0.95, opacity: 0 });
-      gsap.set(card.querySelector('.card-glitter'), { opacity: 0, scale: 0.95 });
-      gsap.set(card.querySelector('.resting-text'), { opacity: 1 });
-    });
+      const N = cards.length;
 
-    if (N > 0) {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "center center", 
-          end: `+=${N * 150}%`, // Longer scroll to read
-          pin: true,
-          scrub: 1,
-          invalidateOnRefresh: true,
-        }
+      // Initial setup: stack them visually
+      cards.forEach((card, i) => {
+        gsap.set(card, {
+          scale: 1 - i * 0.05,
+          y: i * 30, // Each card is slightly lower
+          zIndex: N - i, // Top card has highest z-index
+          opacity: i === 0 ? 1 : Math.max(0, 1 - i * 0.2),
+          filter: `blur(${i * 1.5}px)`,
+          transformOrigin: "top center",
+        });
+        // Ensure children are reset if category changes
+        gsap.set(card.querySelector('.card-image'), { xPercent: 0, scale: 1, boxShadow: "0 24px 64px rgba(0,242,254,0.2)" });
+        gsap.set(card.querySelector('.card-details'), { xPercent: 0, scale: 0.95, opacity: 0 });
+        gsap.set(card.querySelector('.card-glitter'), { opacity: 0, scale: 0.95 });
+        gsap.set(card.querySelector('.resting-text'), { opacity: 1 });
       });
 
-      for (let step = 0; step < N; step++) {
-        const activeCard = cards[step];
-        const slideImageLeft = activeCard.querySelector('.card-image')?.getAttribute('data-slide') === 'left';
-        
-        // PHASE 1: SPLIT
-        tl.to(activeCard.querySelector('.card-image'), {
-          xPercent: slideImageLeft ? -54 : 54,
-          scale: 1.02,
-          boxShadow: "0 12px 32px rgba(0,242,254,0.4)",
-          duration: 1,
-          ease: "power2.inOut"
-        }, `step${step}_split`);
-        
-        tl.to(activeCard.querySelector('.resting-text'), {
-          opacity: 0,
-          duration: 0.5,
-        }, `step${step}_split`);
-        
-        tl.to(activeCard.querySelector('.card-details'), {
-          xPercent: slideImageLeft ? 54 : -54,
-          scale: 1,
-          opacity: 1,
-          duration: 1,
-          ease: "power2.inOut"
-        }, `step${step}_split`);
-        
-        tl.to(activeCard.querySelector('.card-glitter'), {
-          opacity: 1,
-          scale: 1.1,
-          duration: 1,
-          ease: "power2.inOut"
-        }, `step${step}_split`);
+      if (N > 0) {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "center center", 
+            end: `+=${N * 150}%`, // Longer scroll to read
+            pin: true,
+            scrub: 1,
+            invalidateOnRefresh: true,
+          }
+        });
 
-        // Give some reading time while scrolling
-        tl.to({}, {duration: 0.5}); 
-
-        // PHASE 2: OUT & NEXT (only if there are next cards)
-        if (step < N - 1) {
-          tl.to(activeCard, {
-            y: -150,
-            scale: 1.1,
-            opacity: 0,
-            filter: "blur(10px)",
+        for (let step = 0; step < N; step++) {
+          const activeCard = cards[step];
+          const slideImageLeft = activeCard.querySelector('.card-image')?.getAttribute('data-slide') === 'left';
+          
+          // PHASE 1: SPLIT
+          tl.to(activeCard.querySelector('.card-image'), {
+            xPercent: slideImageLeft ? -54 : 54,
+            scale: 1.02,
+            boxShadow: "0 12px 32px rgba(0,242,254,0.4)",
             duration: 1,
-            ease: "power2.in",
-          }, `step${step}_out`);
+            ease: "power2.inOut"
+          }, `step${step}_split`);
+          
+          tl.to(activeCard.querySelector('.resting-text'), {
+            opacity: 0,
+            duration: 0.5,
+          }, `step${step}_split`);
+          
+          tl.to(activeCard.querySelector('.card-details'), {
+            xPercent: slideImageLeft ? 54 : -54,
+            scale: 1,
+            opacity: 1,
+            duration: 1,
+            ease: "power2.inOut"
+          }, `step${step}_split`);
+          
+          tl.to(activeCard.querySelector('.card-glitter'), {
+            opacity: 1,
+            scale: 1.1,
+            duration: 1,
+            ease: "power2.inOut"
+          }, `step${step}_split`);
 
-          // Bring remaining cards forward
-          for (let j = step + 1; j < N; j++) {
-            const pos = j - step - 1; // 0 means it becomes the front card
-            tl.to(cards[j], {
-              scale: 1 - pos * 0.05,
-              y: pos * 30,
-              opacity: pos === 0 ? 1 : Math.max(0, 1 - pos * 0.2),
-              filter: `blur(${pos * 1.5}px)`,
+          // Give some reading time while scrolling
+          tl.to({}, {duration: 0.5}); 
+
+          // PHASE 2: OUT & NEXT (only if there are next cards)
+          if (step < N - 1) {
+            tl.to(activeCard, {
+              y: -150,
+              scale: 1.1,
+              opacity: 0,
+              filter: "blur(10px)",
               duration: 1,
-              ease: "power1.inOut",
+              ease: "power2.in",
             }, `step${step}_out`);
+
+            // Bring remaining cards forward
+            for (let j = step + 1; j < N; j++) {
+              const pos = j - step - 1; // 0 means it becomes the front card
+              tl.to(cards[j], {
+                scale: 1 - pos * 0.05,
+                y: pos * 30,
+                opacity: pos === 0 ? 1 : Math.max(0, 1 - pos * 0.2),
+                filter: `blur(${pos * 1.5}px)`,
+                duration: 1,
+                ease: "power1.inOut",
+              }, `step${step}_out`);
+            }
           }
         }
       }
-    }
+    });
     
     // Force layout refresh and restore scroll if returning from a project detail page
     gsap.delayedCall(0.1, () => {
@@ -345,13 +351,13 @@ export default function AllProjectsPage() {
       </section>
 
       {/* GSAP Scroll Stacking Container */}
-      <section className="relative w-full max-w-4xl mx-auto px-4 pb-[30vh]">
-        <div ref={containerRef} className="relative w-full h-[500px] flex items-center justify-center">
+      <section className="relative w-full max-w-4xl mx-auto px-4 pb-[10vh] md:pb-[30vh]">
+        <div ref={containerRef} className="relative w-full h-auto md:h-[500px] flex flex-col md:block items-center justify-center gap-12 md:gap-0">
           {filtered.length > 0 ? (
             filtered.map((project) => {
               const globalIndex = projectsData.findIndex((p) => p.id === project.id);
               return (
-                <div key={project.id} className="project-card-3d absolute w-full top-0 left-0">
+                <div key={project.id} className="project-card-3d relative md:absolute w-full top-0 left-0">
                   <ProjectCard project={project} globalIndex={globalIndex} />
                 </div>
               );

@@ -12,6 +12,89 @@ const FULL_NAME = "NAMRATA";
 const LETTERS = FULL_NAME.split("");
 const COMBINED_WORDS = ["NAMRATA", "PATEL"];
 
+const HeroButton = ({ 
+  href, 
+  download, 
+  text, 
+  icon: Icon, 
+  isPrimary 
+}: { 
+  href: string, 
+  download?: string, 
+  text: string, 
+  icon: any, 
+  isPrimary: boolean 
+}) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const innerContent = (
+    <div 
+      className={`relative z-10 flex items-center justify-center w-full h-full transition-colors duration-300 font-bold ${
+        isPrimary 
+          ? (isHovered ? "text-white" : "text-black") 
+          : (isHovered ? "text-black" : "text-white")
+      }`}
+    >
+      {isPrimary ? (
+        <>
+          {text}
+          <Icon className="ml-2 w-5 h-5 transition-transform duration-300 transform group-hover:translate-x-1" />
+        </>
+      ) : (
+        <>
+          <Icon className="w-5 h-5 mr-2 transition-transform duration-300 transform group-hover:-translate-y-1 text-accent-cyan" style={{ color: isHovered ? "black" : undefined }} />
+          {text}
+        </>
+      )}
+    </div>
+  );
+
+  const buttonClasses = `group relative overflow-hidden flex items-center justify-center rounded-full min-w-[220px] px-8 py-4 transition-all duration-300 border border-white/15 cursor-pointer ${
+    isPrimary 
+      ? "bg-white shadow-[0_0_20px_rgba(255,255,255,0.2)]" 
+      : "bg-[#11222C]/40 backdrop-blur-md shadow-[0_0_20px_rgba(79,172,254,0.1)]"
+  }`;
+
+  const fillAnimation = (
+    <motion.div
+      initial={{ y: "100%", skewY: 10 }}
+      animate={{ 
+        y: isHovered ? "0%" : "100%", 
+        skewY: isHovered ? 0 : 10 
+      }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className={`absolute inset-0 z-0 ${isPrimary ? "bg-black" : "bg-white"}`}
+    />
+  );
+
+  if (download) {
+    return (
+      <a 
+        href={href} 
+        download={download} 
+        className={buttonClasses}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {fillAnimation}
+        {innerContent}
+      </a>
+    );
+  }
+
+  return (
+    <Link 
+      href={href} 
+      className={buttonClasses}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {fillAnimation}
+      {innerContent}
+    </Link>
+  );
+};
+
 const ROLES = [
   "AI/ML Engineer",
   "Computer Vision Engineer",
@@ -113,7 +196,7 @@ export function HeroSection() {
   const yPos = useTransform(scrollY, [0, 300], [0, 100]);
 
   return (
-    <section className="sticky top-0 h-screen flex items-center justify-center overflow-hidden bg-transparent -z-10">
+    <section id="home" className="sticky top-0 h-screen flex items-center justify-center overflow-hidden bg-transparent">
 
       {/* Absolute Black Overlay for Preloader */}
       <motion.div
@@ -145,14 +228,14 @@ export function HeroSection() {
                   animate={{ opacity: 1, scale: 1, filter: "blur(0px)", y: 60 }}
                   exit={{ opacity: 0, scale: 0.8, filter: "blur(10px)", y: 60 }}
                   transition={{ duration: 0.12 }}
-                  className="text-[140px] sm:text-[210px] font-black tracking-tighter leading-none text-white absolute uppercase z-50"
+                  className="text-[30vw] sm:text-[210px] font-black tracking-tighter leading-none text-white absolute uppercase z-50"
                 >
                   {LETTERS[currentLetterIndex]}
                 </motion.h1>
               ) : introStage === "merged" || introStage === "complete" ? (
                 <motion.div
                   key="full-name"
-                  className="flex flex-col -space-y-5 sm:-space-y-1 items-center justify-center z-50 pointer-events-none mt-8 sm:mt-12"
+                  className="flex flex-col -space-y-2 sm:-space-y-1 items-center justify-center z-50 pointer-events-none mt-8 sm:mt-12"
                 >
                   {COMBINED_WORDS.map((word, wIdx) => {
                     const xStart = (wIdx === 0 ? -1 : 1) * 200;
@@ -188,7 +271,7 @@ export function HeroSection() {
                               type: "spring",
                               bounce: 0.4
                             }}
-                            className="text-[52px] sm:text-[63px] lg:text-[112px] font-black tracking-tighter leading-none text-white uppercase inline-block drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+                            className="text-[13vw] sm:text-[63px] lg:text-[112px] font-black tracking-tighter leading-none text-white uppercase inline-block drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
                           >
                             {letter}
                           </motion.span>
@@ -245,16 +328,19 @@ export function HeroSection() {
           transition={{ duration: 1, delay: 0.5 }}
           className="mt-12 flex flex-wrap justify-center items-center gap-6 pointer-events-auto"
         >
-          <Link href="#projects" className="group relative overflow-hidden px-8 py-4 rounded-full bg-white text-background font-bold transition-all duration-300 hover:scale-105 inline-flex items-center">
-            <span className="relative z-10 flex items-center">
-              View Projects
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </span>
-          </Link>
-          <a href="/Namrata_patel_resume.pdf" download="Namrata_patel_resume.pdf" target="_blank" className="group px-8 py-4 rounded-full glass hover:bg-white/5 transition-all duration-300 font-semibold border-white/10 text-white inline-flex items-center hover:-translate-y-1">
-            <Download className="w-5 h-5 mr-2 group-hover:-translate-y-1 transition-transform duration-300 text-accent-cyan" />
-            Download Resume
-          </a>
+          <HeroButton 
+            href="/projects" 
+            text="View Projects" 
+            icon={ArrowRight} 
+            isPrimary={true} 
+          />
+          <HeroButton 
+            href="/Namrata_patel_resume.pdf" 
+            download="Namrata_patel_resume.pdf" 
+            text="Download Resume" 
+            icon={Download} 
+            isPrimary={false} 
+          />
         </motion.div>
 
         {/* Minimalist Metrics */}

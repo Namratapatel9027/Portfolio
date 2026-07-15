@@ -47,7 +47,7 @@ export function AboutSection() {
             {/* BACKGROUND TEXT (Faded/Muted) */}
             <div className="text-white/[0.05] absolute inset-0 pointer-events-none z-0">
               <span className="block text-2xl md:text-3xl mb-4 text-white/[0.05]">Hello, I'm Namrata!</span>
-              I’m an <span className="text-white/[0.05]">AI/ML Engineer</span> and <span className="text-white/[0.05]">Computer Vision Engineer</span> with 1 year of experience who turns complex visual data into real-world intelligence.<br /><br />
+              I’m an <span className="text-white/[0.05]">AI/ML Engineer</span> and <span className="text-white/[0.05]">Computer Vision Engineer</span> with 1+ year of experience who turns complex visual data into real-world intelligence.<br /><br />
               I specialize in building high-accuracy deep learning systems with a strong focus on <span className="text-white/[0.05]">healthcare AI</span> (like medical imaging and digital pathology) and <span className="text-white/[0.05]">industrial automation</span>.<br /><br />
               From real-time object detection (YOLO) to advanced medical image segmentation (U-Net, Vision Transformers), I build end-to-end pipelines that make AI systems <span className="text-white/[0.05]">reliable, scalable, and clinically interpretable</span>.
             </div>
@@ -58,7 +58,7 @@ export function AboutSection() {
               className="text-text-secondary relative z-10"
             >
               <span className="block text-2xl md:text-3xl mb-4 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]">Hello, I'm Namrata!</span>
-              I’m an <span className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">AI/ML Engineer</span> and <span className="text-accent-cyan drop-shadow-[0_0_15px_rgba(6,182,212,0.4)]">Computer Vision Engineer</span> with 1 year of experience who turns complex visual data into real-world intelligence.<br /><br />
+              I’m an <span className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">AI/ML Engineer</span> and <span className="text-accent-cyan drop-shadow-[0_0_15px_rgba(6,182,212,0.4)]">Computer Vision Engineer</span> with 1+ year of experience who turns complex visual data into real-world intelligence.<br /><br />
               I specialize in building high-accuracy deep learning systems with a strong focus on <span className="text-accent-purple drop-shadow-[0_0_15px_rgba(168,85,247,0.4)]">healthcare AI</span> (like medical imaging and digital pathology) and <span className="text-accent-mint drop-shadow-[0_0_15px_rgba(74,222,128,0.4)]">industrial automation</span>.<br /><br />
               From real-time object detection (YOLO) to advanced medical image segmentation (U-Net, Vision Transformers), I build end-to-end pipelines that make AI systems <span className="text-accent-cyan drop-shadow-[0_0_15px_rgba(6,182,212,0.4)]">reliable, scalable, and clinically interpretable</span>.
             </motion.div>

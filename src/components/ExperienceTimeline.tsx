@@ -4,10 +4,10 @@ import { motion } from "framer-motion";
 
 export const experiences = [
   {
-    company: "Pixonate Lab Pvt. Ltd.",
+    company: "Pixonate Lab Pvt. Ltd. (On-site)",
     location: "Pune, India",
     role: "AI/ML Engineer",
-    duration: "June 2025 - Present",
+    duration: "June 2025 - June 2026",
     achievements: [
       "Leading research-based projects utilizing Vision Transformers (ViT) for high-accuracy medical analysis and non-invasive diagnostics.",
       "Implementing YOLO (v8/v10) for real-time object detection and integrating vision systems into industrial automation workflows.",

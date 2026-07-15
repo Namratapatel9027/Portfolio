@@ -116,7 +116,7 @@ const projectsData: Record<string, any> = {
     shortDesc: "An automated quality control system utilizing a dual-stage YOLOv8 pipeline to detect bearings and count internal pins for real-time defect classification.",
     longDesc: "This project presents an Automated Bearing Quality Inspection System that leverages deep learning and computer vision to inspect bearing images automatically in a manufacturing setting. The system accurately detects bearings, counts their internal pins, and classifies each bearing as either Good or Defective based on a strict 16-pin count threshold.\n\nThe pipeline follows a highly optimized two-stage detection process using custom-trained YOLOv8 models. Stage 1 identifies and localizes individual bearings from a tray image, cropping them for further analysis. Stage 2 detects and counts pins inside each cropped bearing. A rule-based classification algorithm then marks bearings with exactly 16 pins as 'Good' and fewer than 16 pins as 'Defective'. The entire pipeline is integrated into an interactive Streamlit dashboard that displays bounding boxes, pin counts, highlights defective bearings for review, and exports analytical reports.",
     tech: ["YOLOv8", "Python", "OpenCV", "Streamlit", "PyTorch"],
-    image: "/images/proj_bearing.png",
+    image: "/images/proj_bearing_new.png",
     github: "https://github.com/Namratapatel9027/Automated-Bearing-Quality-Inspection",
     demo: "#",
     hideVideo: true,

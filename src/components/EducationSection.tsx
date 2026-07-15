@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const educationDetails = [
   {
-    institution: "Dr. Babasaheb Ambedkar Technological University (DBATU), Pune",
+    institution: "Dr. Babasaheb Ambedkar Technological University (DBATU), Shahada",
     degree: "Bachelor of Technology - Computer Science",
     duration: "Nov 2022 - Aug 2025",
     details: "CGPA: 7.7"
@@ -13,7 +13,7 @@ const educationDetails = [
     institution: "Maharashtra State Board of Technical Education (MSBTE), Shahada",
     degree: "Diploma - Computer Science",
     duration: "Nov 2019 - Jun 2022",
-    details: "CGPA: 8.3"
+    details: "Percentage: 82.91%"
   }
 ];
 
@@ -21,7 +21,7 @@ export function EducationSection() {
   return (
     <section id="education" className="pt-12 md:pt-16 pb-24 relative bg-transparent">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         <div className="mb-16">
           <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter">My <span className="text-gradient">Education</span></h2>
           <p className="mt-4 text-xl text-text-secondary">Academic background and qualifications.</p>
@@ -41,7 +41,7 @@ export function EducationSection() {
                 <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{item.degree}</h3>
                 <h4 className="text-base sm:text-lg text-text-secondary">{item.institution}</h4>
               </div>
-              
+
               <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-4 border-t md:border-t-0 md:border-l border-white/10 pt-4 md:pt-0 md:pl-8 min-w-[150px]">
                 <span className="text-sm font-bold text-accent-cyan uppercase tracking-wider bg-white/5 px-3 py-1 rounded-full">
                   {item.duration}

@@ -17,10 +17,10 @@ if (typeof window !== "undefined") {
 
 const categories = [
   { key: "all",     label: "All Projects",    value: projectsData.length, ids: projectsData.map((p) => p.id) },
-  { key: "cv",      label: "Computer Vision", value: 4, ids: ["employee-monitoring", "pest-detection", "tumor-detection", "medical-ocr-system"] },
+  { key: "cv",      label: "Computer Vision", value: 5, ids: ["employee-monitoring", "pest-detection", "tumor-detection", "medical-ocr-system", "bearing-quality-inspection"] },
   { key: "medical", label: "Medical AI",       value: 3, ids: ["anemia-detection", "tumor-detection", "medical-ocr-system"] },
   { key: "data",    label: "Data & Analytics", value: 3, ids: ["atliq-hardware-360", "atliq-grand-hotel", "sales-finance-report"] },
-  { key: "ai",      label: "AI / ML",          value: 5, ids: ["employee-monitoring", "pest-detection", "anemia-detection", "tumor-detection", "medical-ocr-system"] },
+  { key: "ai",      label: "AI / ML",          value: 6, ids: ["employee-monitoring", "pest-detection", "anemia-detection", "tumor-detection", "medical-ocr-system", "bearing-quality-inspection"] },
 ];
 
 const SPARKLES = [
@@ -367,6 +367,21 @@ export default function AllProjectsPage() {
             </div>
           )}
         </div>
+      </section>
+
+      {/* Scroll to Top Button */}
+      <section className="pb-16 flex justify-center w-full relative z-20">
+        <button 
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="flex flex-col items-center gap-2 group"
+        >
+          <div className="w-12 h-12 rounded-full border border-accent-cyan/30 bg-accent-cyan/10 flex items-center justify-center text-accent-cyan group-hover:bg-accent-cyan/20 group-hover:-translate-y-2 transition-all duration-300 shadow-[0_0_15px_rgba(0,242,254,0.2)] group-hover:shadow-[0_0_25px_rgba(0,242,254,0.4)]">
+            <ArrowRight className="w-5 h-5 -rotate-90" />
+          </div>
+          <span className="text-text-secondary text-xs font-mono uppercase tracking-widest group-hover:text-accent-cyan transition-colors">
+            Back to Top
+          </span>
+        </button>
       </section>
     </main>
   );

@@ -12,28 +12,27 @@ const FULL_NAME = "NAMRATA";
 const LETTERS = FULL_NAME.split("");
 const COMBINED_WORDS = ["NAMRATA", "PATEL"];
 
-const HeroButton = ({ 
-  href, 
-  download, 
-  text, 
-  icon: Icon, 
-  isPrimary 
-}: { 
-  href: string, 
-  download?: string, 
-  text: string, 
-  icon: any, 
-  isPrimary: boolean 
+const HeroButton = ({
+  href,
+  download,
+  text,
+  icon: Icon,
+  isPrimary
+}: {
+  href: string,
+  download?: string,
+  text: string,
+  icon: any,
+  isPrimary: boolean
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const innerContent = (
-    <div 
-      className={`relative z-10 flex items-center justify-center w-full h-full transition-colors duration-300 font-bold ${
-        isPrimary 
-          ? (isHovered ? "text-white" : "text-black") 
-          : (isHovered ? "text-black" : "text-white")
-      }`}
+    <div
+      className={`relative z-10 flex items-center justify-center w-full h-full transition-colors duration-300 font-bold ${isPrimary
+        ? (isHovered ? "text-white" : "text-black")
+        : (isHovered ? "text-black" : "text-white")
+        }`}
     >
       {isPrimary ? (
         <>
@@ -49,18 +48,17 @@ const HeroButton = ({
     </div>
   );
 
-  const buttonClasses = `group relative overflow-hidden flex items-center justify-center rounded-full min-w-[220px] px-8 py-4 transition-all duration-300 border border-white/15 cursor-pointer ${
-    isPrimary 
-      ? "bg-white shadow-[0_0_20px_rgba(255,255,255,0.2)]" 
-      : "bg-[#11222C]/40 backdrop-blur-md shadow-[0_0_20px_rgba(79,172,254,0.1)]"
-  }`;
+  const buttonClasses = `group relative overflow-hidden flex items-center justify-center rounded-full min-w-[220px] px-8 py-4 transition-all duration-300 border border-white/15 cursor-pointer ${isPrimary
+    ? "bg-white shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+    : "bg-[#11222C]/40 backdrop-blur-md shadow-[0_0_20px_rgba(79,172,254,0.1)]"
+    }`;
 
   const fillAnimation = (
     <motion.div
       initial={{ y: "100%", skewY: 10 }}
-      animate={{ 
-        y: isHovered ? "0%" : "100%", 
-        skewY: isHovered ? 0 : 10 
+      animate={{
+        y: isHovered ? "0%" : "100%",
+        skewY: isHovered ? 0 : 10
       }}
       transition={{ duration: 0.3, ease: "easeOut" }}
       className={`absolute inset-0 z-0 ${isPrimary ? "bg-black" : "bg-white"}`}
@@ -69,9 +67,9 @@ const HeroButton = ({
 
   if (download) {
     return (
-      <a 
-        href={href} 
-        download={download} 
+      <a
+        href={href}
+        download={download}
         className={buttonClasses}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -83,8 +81,8 @@ const HeroButton = ({
   }
 
   return (
-    <Link 
-      href={href} 
+    <Link
+      href={href}
       className={buttonClasses}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -328,18 +326,18 @@ export function HeroSection() {
           transition={{ duration: 1, delay: 0.5 }}
           className="mt-12 flex flex-wrap justify-center items-center gap-6 pointer-events-auto"
         >
-          <HeroButton 
-            href="/projects" 
-            text="View Projects" 
-            icon={ArrowRight} 
-            isPrimary={true} 
+          <HeroButton
+            href="/projects"
+            text="View Projects"
+            icon={ArrowRight}
+            isPrimary={true}
           />
-          <HeroButton 
-            href="/Namrata_patel_resume.pdf" 
-            download="Namrata_patel_resume.pdf" 
-            text="Download Resume" 
-            icon={Download} 
-            isPrimary={false} 
+          <HeroButton
+            href="/Namrata_patel_resume.pdf"
+            download="Namrata_patel_resume.pdf"
+            text="Download Resume"
+            icon={Download}
+            isPrimary={false}
           />
         </motion.div>
 
@@ -352,7 +350,7 @@ export function HeroSection() {
         >
           {[
             { label: "Core Projects", value: `${projectsData.length}+` },
-            { label: "Experience Roles", value: `${experiences.length}` },
+            { label: "Year of Experience", value: `${experiences.length}+` },
             { label: "Publications", value: `${publications.length}` },
             { label: "Visitors", value: visitorCount !== null ? visitorCount.toString() : "..." },
           ].map((metric) => (

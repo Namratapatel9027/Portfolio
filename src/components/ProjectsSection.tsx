@@ -43,6 +43,13 @@ export const projectsData = [
     image: "/images/proj_employee.png",
   },
   {
+    id: "bearing-quality-inspection",
+    title: "Automated Bearing Quality Inspection",
+    problem: "AI-driven pipeline for detecting defective bearings based on 16-pin count analysis in manufacturing.",
+    tech: ["YOLOv8", "Python", "OpenCV", "Streamlit", "PyTorch"],
+    image: "/images/proj_bearing_new.png",
+  },
+  {
     id: "pest-detection",
     title: "Pest Detection in Agriculture",
     problem: "Late detection of crop pests leads to significant agricultural losses and non-sustainable farming practices.",

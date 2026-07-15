@@ -61,6 +61,30 @@ const projectsData: Record<string, any> = {
     hideVideo: true,
     hideDemo: true
   },
+  "medical-ocr-system": {
+    title: "Medical Packaging OCR System",
+    subtitle: "Automated OCR pipeline for pharmaceutical packaging inspection.",
+    shortDesc: "An end-to-end computer vision and OCR system designed to detect and extract key fields like expiry dates and MRP from medical packages.",
+    longDesc: "This project automates the inspection of medical packaging on production lines. A custom YOLOv8 model detects key regions of interest such as medicine name, expiry date, batch number, MRP, and barcodes from images of medicine boxes and blister packs. These regions are cropped and preprocessed using OpenCV to enhance readability.\n\nThe cleaned images are passed to PaddleOCR for text extraction. Post-processing with Python and regular expressions standardizes dates, validates prices, and corrects common OCR errors. The structured results are returned as JSON through a FastAPI backend, and the entire pipeline is wrapped in a Streamlit interface for easy user interaction and deployed using Docker.",
+    tech: ["YOLOv8", "OpenCV", "PaddleOCR", "FastAPI", "Streamlit", "Docker"],
+    image: "/images/proj_medical_ocr.png",
+    github: "#",
+    demo: "#",
+    hideVideo: true,
+    hideDemo: true
+  },
+  "tumor-detection": {
+    title: "Tumor Localization Project",
+    subtitle: "Computational Pathology — Tumor vs Non-Tumor classification + localization",
+    shortDesc: "A Multiple Instance Learning (MIL) approach to localize tumor regions in Whole Slide Images without pixel-level annotations, achieving over 95% accuracy.",
+    longDesc: "This project addresses the scale problem in computational pathology, where gigapixel Whole Slide Images (WSI) cannot fit into GPU memory and pixel-level annotations are clinically expensive. I built an end-to-end pipeline that extracts 128x128 patches at 2.5x magnification and processes them through a UNet2-based feature extractor.\n\nThe core model is based on CLAM (Clustering-constrained Attention Multiple Instance Learning). It treats each slide as a bag of instances and learns attention scores to identify tumor-relevant patches from only slide-level labels. Finally, the attention maps are exported as GeoJSON overlays for visualization in QuPath, bridging AI reasoning directly with clinical workflows.",
+    tech: ["UNet2", "CLAM", "K-Means", "QuPath", "OpenCV"],
+    image: "/images/proj_tumor.png",
+    github: "#",
+    demo: "#",
+    hideVideo: true,
+    hideDemo: true
+  },
   "anemia-detection": {
     title: "Non-Invasive Anemia Detection",
     subtitle: "A deep learning approach for non-invasive anemia diagnosis using Vision Transformers.",

@@ -1,0 +1,209 @@
+TUMOR LOCALIZATION PROJECT
+Full Interview Script — STAR Method
+WSI Analysis | CLAM | UNet2 | K-Means | QuPath
+As Told by Namrata Patel | Friendly & Confident Tone
+📖  HOW TO USE THIS SCRIPT
+Three versions — SHORT (2 min), MEDIUM (4-5 min), and DEEP DIVE for technical follow-ups. Start with SHORT, go deeper if the interviewer leans in and asks follow-up questions.
+This project is more technical than the anemia project. The key concepts to nail are: WHY we can't feed WSI directly, WHAT CLAM does differently from a regular classifier, and HOW attention scores help localize tumors without pixel-level annotation.
+🎯  VERSION 1 — SHORT ANSWER  (~2 minutes)
+💡 TIP:  
+Use when asked casually: 'Tell me briefly about your tumor project.'
+★ 
+SITUATION + TASK
+This project was in the field of computational pathology — using AI to help pathologists detect tumors in tissue slide images.
+The challenge is the scale. A Whole Slide Image — or WSI — is a gigapixel scan of a tissue sample. We're talking 100,000 by 100,000 pixels. You simply cannot load that into a GPU and run a model on it directly.
+The task was to build a system that could automatically localize tumor regions in these massive slides — and do it with only slide-level labels, not pixel-level annotations. Because annotating every pixel of a WSI is extremely expensive and time-consuming for pathologists.
+[ PAUSE — let them process, invite a question ]
+★ 
+ACTION
+I built a pipeline starting with patch extraction — cutting each WSI into 128×128 pixel patches at 2.5x magnification. Then I used a UNet2-based model to generate embeddings — a compact feature vector — for each patch.
+I then trained a CLAM model — Clustering-constrained Attention Multiple Instance Learning — which treats each slide as a bag of patch embeddings and learns to assign attention scores to each patch. High attention means the model found that patch suspicious for tumor.
+Finally, I used those attention scores to generate GeoJSON files and visualized the highlighted tumor regions in QuPath — a pathology visualization tool.
+[ PAUSE — let them process, invite a question ]
+★ 
+RESULT
+The system achieved over 95% accuracy on tumor versus non-tumor classification. More importantly, the attention maps highlighted regions that matched actual tumor locations — giving pathologists a visual tool to verify the AI's reasoning, not just trust a black-box prediction.
+[ PAUSE — let them process, invite a question ]
+🎯  VERSION 2 — MEDIUM ANSWER  (~4-5 minutes)
+💡 TIP:  
+Use when asked: 'Walk me through your tumor localization project in detail.'
+★ 
+S — SITUATION: The scale problem in pathology
+Let me give you some context first — because the problem itself is fascinating and it shapes every technical decision I made.
+In cancer diagnosis, a pathologist looks at a tissue slide — a thin section of a biopsy mounted on glass and stained. When this gets digitized, you get a Whole Slide Image. These are not regular images. They can be 50,000 to 150,000 pixels wide and equally tall. Gigapixel images.
+A pathologist scanning one of these manually at high magnification can spend 20-30 minutes just on one slide. In a busy hospital, that's a bottleneck that costs lives. Our goal was to build an AI system that could scan the entire slide and tell the pathologist exactly where to look.
+[ PAUSE — let them process, invite a question ]
+★ 
+T — TASK: What I needed to build
+The specific task was binary classification — tumor versus non-tumor — at the slide level, with localization. Meaning the system needed to not just say 'this slide has a tumor' but also highlight which specific regions contain tumor tissue.
+The critical constraint was that we only had slide-level labels — we knew which slides were tumor-positive and which were not, but we didn't have pixel-level or patch-level annotations. Getting a pathologist to annotate every patch would take hundreds of hours.
+This is called a Weakly Supervised Learning problem — you learn from weak, slide-level labels and the model has to figure out which patches within the slide are responsible for the positive label.
+[ PAUSE — let them process, invite a question ]
+★ 
+A — ACTION: Step by step
+▸ Step 1 — WSI Preprocessing & Patch Extraction
+The first challenge was just reading and processing the WSI files. These come in specialized formats and can't be opened like a regular image.
+I wrote a pipeline to create tissue masks first — using OpenCV to filter out the glass background and keep only the actual tissue regions. This is important because background patches carry zero information and would just waste compute.
+Then I extracted patches of size 128×128 pixels at 2.5x magnification. I also worked with 256×256 patches depending on the task. At 2.5x magnification, you get the broader tissue context — useful for seeing the overall structure rather than individual cells.
+Each slide produced hundreds to thousands of patches. I saved these systematically — organized by slide name, with coordinates recorded so I could map patches back to their location on the original slide later.
+📝 NOTE:  
+Magnification matters: 2.5x gives you tissue architecture (broad view), 5x gives more cellular detail. I used 2.5x for the initial CLAM training for computational efficiency.
+[ PAUSE — let them process, invite a question ]
+▸ Step 2 — Feature Extraction Using UNet2
+Now I had patches — but raw pixel patches are high-dimensional and noisy. I needed compact, meaningful feature representations of each patch.
+I used a UNet2-based custom model to extract embeddings — essentially passing each patch through the encoder part of UNet2 and taking the bottleneck output as a feature vector. This gives me a representation of size 1536 per patch — capturing both local texture and spatial context from the patch.
+The UNet2 model was pretrained, so it already understood tissue structures from prior training — I was using it purely as a feature extractor, not training it from scratch for this task.
+The result was: for every patch across every slide, I had a 1536-dimensional embedding. These embeddings became the input to the CLAM model.
+📝 NOTE:  
+Think of UNet2 as a translator — it converts a raw 128x128 pixel image into a 1536-dimensional 'meaning vector' that captures what's in that patch in a compact form.
+[ PAUSE — let them process, invite a question ]
+▸ Step 3 — K-Means Clustering for Label Creation
+Here's something a bit unusual that I did — I used K-Means clustering on the patch embeddings to visualize the feature space and verify that the embeddings were actually capturing meaningful differences between tumor and non-tumor tissue.
+By clustering embeddings and then checking which cluster corresponded to which tissue type, I could confirm that UNet2 features were separating tumor patches from normal patches — even without explicit patch labels. This gave me confidence that the features were good before feeding them into CLAM.
+I also created a CSV at this stage that stored: slide name, slide-level label (1 for tumor-positive, 0 for non-tumor), and the path to each patch's embedding. This CSV became the primary input to CLAM training.
+[ PAUSE — let them process, invite a question ]
+▸ Step 4 — CLAM: The Core of the Pipeline
+⚠️ IMPORTANT:  
+This is the most conceptually important part. Understand it deeply — interviewers will dig here.
+CLAM stands for Clustering-constrained Attention Multiple Instance Learning. Let me break that down.
+The core idea is Multiple Instance Learning, or MIL. In MIL, you have bags and instances. Here, each slide is one bag, and each patch within that slide is one instance. You have a label for the bag — tumor or non-tumor — but not for individual instances.
+CLAM treats each slide as a bag of patch embeddings. It takes all the 1536-dimensional patch embeddings for a slide and processes them through an attention module.
+The attention module assigns a score to each patch — how important is this patch for the slide's classification? Patches that look like tumor get high attention scores. Normal-looking patches get low scores.
+The slide-level representation is then computed as a weighted sum of all patch embeddings — where the weights are the attention scores. This aggregated representation is passed to a fully connected classification head that outputs the final tumor or non-tumor prediction.
+The beautiful thing is — CLAM learns which patches matter just by training on slide-level labels. It discovers tumor-relevant patches on its own through the attention mechanism.
+📝 NOTE:  
+CLAM formula in simple terms: Slide prediction = classify(sum of (attention_score[i] × embedding[i]) for all patches i). The attention scores are learned — they're not handcrafted.
+[ PAUSE — let them process, invite a question ]
+▸ Step 5 — Training the CLAM Model
+For training, the CSV I created had: slide ID, slide label (1 or 0), and paths to all patch embeddings for that slide.
+CLAM uses a specialized loss — it has the main classification loss plus a clustering constraint that encourages the attention scores to be spread across meaningful patches rather than focusing on just one or two.
+I also trained a separate CLAM classifier for the tumor region specifically — using the second task in the notes, where I focused only on patches from known tumor regions to refine the model's understanding of what tumor tissue looks like at patch level.
+After training, I saved the best model checkpoint based on validation accuracy — using the attention scores per patch for inference.
+[ PAUSE — let them process, invite a question ]
+▸ Step 6 — Tumor Localization via Attention Scores & QuPath
+This is where everything comes together visually.
+After training, for each slide I ran inference and collected the attention score for every single patch. High attention = model thinks this is tumor. Low attention = model thinks this is normal tissue.
+I then used the x, y coordinates of each patch — which I had saved during extraction — to map the attention scores back onto the original WSI coordinate space.
+From these attention scores and coordinates, I generated GeoJSON files. GeoJSON is a standard format for geospatial data — and QuPath, the pathology viewer, can load GeoJSON overlays and display them on top of the WSI.
+So a pathologist can open QuPath, load the slide, and see a color-coded overlay — red for high-attention tumor regions, green for low-attention normal regions. They get the model's reasoning visually, overlaid directly on the tissue they're already looking at.
+📝 NOTE:  
+QuPath is an open-source pathology image analysis platform. Using GeoJSON to bridge AI output and QuPath visualization is a key engineering detail that shows real production thinking.
+[ PAUSE — let them process, invite a question ]
+★ 
+R — RESULT
+The final system achieved over 95% accuracy on the tumor versus non-tumor classification task at the slide level.
+More meaningfully — the attention maps highlighted regions that were consistent with actual tumor locations as verified against the slide annotations. The system wasn't just getting the right answer, it was reasoning about the right regions.
+The QuPath visualization made this system genuinely usable for a pathologist — they could see exactly which regions the AI flagged, verify it against their own assessment, and build trust in the system incrementally.
+This kind of system could reduce the time a pathologist spends on initial screening from 20-30 minutes per slide to just a few minutes of targeted review.
+[ PAUSE — let them process, invite a question ]
+🎯  VERSION 3 — DEEP DIVE  (Specific technical follow-ups)
+💡 TIP:  
+Use these standalone blocks when the interviewer goes deep on a specific concept.
+▸ IF ASKED: 'Why can't you just train a patch-level classifier?'
+Great question — and it's the most natural objection.
+You could train a patch-level classifier, but it requires patch-level labels — someone has to annotate every single patch across every slide as tumor or normal. For a single gigapixel slide, that could mean thousands of patches. Multiply that by hundreds of slides and you're talking about an annotation effort that would take a team of pathologists months.
+MIL with CLAM solves this by learning from only slide-level labels — which are much cheaper to obtain. A pathologist just needs to say 'this slide is from a cancer patient' — not annotate every patch.
+Additionally, tumor boundaries are often ambiguous even for experts. CLAM's soft attention approach handles this ambiguity naturally — it doesn't force a hard tumor/normal label onto every patch, it just assigns a continuous importance score.
+[ PAUSE — let them process, invite a question ]
+▸ IF ASKED: 'What exactly is the attention mechanism in CLAM?'
+CLAM uses a gated attention mechanism. For each patch embedding h_i, the attention score a_i is computed as: a_i = softmax of (w_a × tanh(V × h_i) ⊙ sigmoid(U × h_i)), where V, U, and w_a are learned weight matrices, and ⊙ is element-wise multiplication.
+In simpler terms — there are two gates. One gate uses tanh activation, the other uses sigmoid. Their element-wise product is computed, then multiplied by a learned weight vector to get a single scalar attention score per patch. Softmax normalizes all attention scores so they sum to 1 across all patches in the bag.
+The gating mechanism helps the model focus on patches that are both strongly activated in one direction — high or low — making the attention more discriminative.
+The final slide representation is: H_slide = sum of a_i × h_i for all patches. This weighted average is what gets classified.
+📝 NOTE:  
+You don't need to memorise the exact formula. Just say: each patch gets a learned attention score, high attention = important for classification, the slide representation is the attention-weighted average of all patch embeddings.
+[ PAUSE — let them process, invite a question ]
+▸ IF ASKED: 'Why UNet2 for embeddings instead of ResNet?'
+UNet2 — also called UNet++ or a variant of UNet — has dense skip connections between encoder layers at different scales. This means the features it produces capture information at multiple resolutions simultaneously.
+For pathology patches, this matters because tissue has structure at multiple scales — cell-level details, gland-level patterns, and broader architectural patterns. A standard ResNet gives you features primarily at the final downsampled scale.
+UNet2's encoder produces richer, multi-scale features in the bottleneck — which makes for more discriminative patch embeddings when fed into CLAM. The 1536-dimensional embedding carries more information about the patch than a standard ResNet bottleneck would.
+[ PAUSE — let them process, invite a question ]
+▸ IF ASKED: 'What is QuPath and why did you use it?'
+QuPath is an open-source digital pathology image analysis platform. It's the industry standard tool that most computational pathology labs use.
+I used it specifically for visualization. After generating attention scores for every patch, I converted those scores and their spatial coordinates into GeoJSON annotations — which QuPath can read and overlay directly on the WSI.
+This means a pathologist gets a heat map of tumor probability directly on top of the tissue image they're already comfortable viewing. It integrates the AI output into their existing workflow rather than asking them to use a new tool.
+This was an important design decision — if you want clinicians to actually use your AI system, it has to fit their workflow. QuPath integration does exactly that.
+[ PAUSE — let them process, invite a question ]
+▸ IF ASKED: 'What is the difference between MIL and standard supervised learning?'
+In standard supervised learning, every training example has a label. For pathology, that would mean every patch has a label — tumor or normal.
+In Multiple Instance Learning, labels are at the bag level, not the instance level. You know the slide has tumor — but not which specific patches contain it. The model has to learn to identify the relevant instances from only the bag-level supervision signal.
+This is much more realistic for medical applications because getting instance-level labels is expensive and often subjective. MIL bridges the gap between what's clinically feasible to annotate and what the model needs to learn.
+[ PAUSE — let them process, invite a question ]
+📊  QUICK REFERENCE — Key Numbers & Technical Details
+Parameter
+Value / Detail
+Project Type
+Computational Pathology — Tumor vs Non-Tumor classification + localization
+Input Data
+Whole Slide Images (WSI) — gigapixel tissue scans
+Task Type
+Weakly Supervised — slide-level labels only (no patch annotations)
+Patch Size
+128×128 pixels (primary) / 256×256 (alternate task)
+Magnification
+2.5x (primary), 5x (secondary)
+Feature Extractor
+UNet2 (custom ResNet backbone)
+Embedding Dimension
+1536 per patch
+Clustering
+K-Means — to validate embedding quality and create label CSV
+CSV Contents
+Slide name, slide label (1/0), patch paths, patch embeddings
+Core Model
+CLAM — Clustering-constrained Attention MIL
+Learning Paradigm
+Multiple Instance Learning (MIL)
+Bag Definition
+One slide = one bag, each patch = one instance
+Attention Mechanism
+Gated attention — assigns importance score per patch
+Classification
+Slide-level: Tumor (positive) / Non-Tumor (negative)
+Localization Method
+Attention scores mapped to patch x,y coordinates → GeoJSON
+Visualization Tool
+QuPath — open-source pathology viewer
+Final Accuracy
+95%+
+Key Advantage
+No pixel-level annotation needed — learns from slide labels only
+❓  COMMON FOLLOW-UP QUESTIONS — Ready Answers
+Q: Why not use a standard image classifier on the full WSI?
+A: 
+A WSI is too large to fit in GPU memory — a single slide can be gigabytes. Standard classifiers expect fixed-size inputs like 224×224. You have to break it into patches. And once you have patches, you need a way to aggregate patch-level information to get a slide-level decision — that's exactly what CLAM does.
+Q: What are GeoJSONs and why use them for visualization?
+A: 
+GeoJSON is a standard format for representing geographic features with coordinates. In pathology, each patch has x,y coordinates on the slide — making it naturally geospatial. By converting attention scores and patch coordinates to GeoJSON, I can load them as overlay annotations in QuPath, which natively supports GeoJSON. It's the cleanest way to bridge AI output and clinical visualization.
+Q: What does 'weakly supervised' mean in this context?
+A: 
+Weakly supervised means we have labels, but not at the level we need for direct supervision. Here we have slide-level labels (tumor/non-tumor) but we need to learn which patches within the slide are responsible. The supervision signal is weaker than patch-level labels would be — hence 'weakly supervised'. CLAM handles this by learning through the attention mechanism what makes a bag positive.
+Q: How did you validate that the attention maps were correct?
+A: 
+I did qualitative validation — overlaying the attention maps in QuPath and visually checking that high-attention regions corresponded to visually suspicious tissue areas. Since we had some slides with known tumor boundaries from the original dataset, I could check alignment. Ideally you'd do quantitative validation with pixel-level IoU, but for this project qualitative validation with pathologist review was the approach.
+Q: What was the hardest part technically?
+A: 
+The WSI preprocessing pipeline — handling different WSI formats, filtering background tissue using masks, saving thousands of patches with their exact coordinates, and making sure the coordinate system was consistent so patches could be mapped back to the slide correctly in QuPath. The CLAM model itself has good open-source implementations — the engineering of the data pipeline was the harder problem.
+🔁  PIPELINE SUMMARY — The Flow in One View
+WSI Input  →  
+Gigapixel tissue slide image (tumor-positive or tumor-negative at slide level)
+Step 1  →  
+Create tissue mask using OpenCV — remove glass background
+Step 2  →  
+Extract patches: 128×128px at 2.5x magnification. Save with x,y coords
+Step 3  →  
+Pass each patch through UNet2 encoder → 1536-dim embedding per patch
+Step 4  →  
+K-Means clustering on embeddings → verify separability → create label CSV
+Step 5  →  
+CLAM training: slide bag (all patch embeddings) + slide label → learn attention scores
+Step 6  →  
+Inference: CLAM assigns attention score to every patch across all slides
+Step 7  →  
+Map attention scores back to x,y patch coordinates → generate GeoJSON
+Step 8  →  
+Load GeoJSON overlay in QuPath → visualize tumor heatmap on original WSI
+Output  →  
+Slide-level prediction (tumor/non-tumor) + spatial localization heatmap in QuPath
+This is cutting-edge computational pathology. Speak about it with confidence — very few 9-month engineers have done this.
+You built this, Namrata. Own it completely! 💪

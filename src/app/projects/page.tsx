@@ -17,10 +17,10 @@ if (typeof window !== "undefined") {
 
 const categories = [
   { key: "all",     label: "All Projects",    value: projectsData.length, ids: projectsData.map((p) => p.id) },
-  { key: "cv",      label: "Computer Vision", value: 3, ids: ["employee-monitoring", "pest-detection", "bearing-quality-inspection"] },
-  { key: "medical", label: "Medical AI",       value: 1, ids: ["anemia-detection"] },
-  { key: "data",    label: "Data & Analytics", value: 3, ids: ["atliq-grand-hotel", "atliq-hardware-360", "sales-finance-report"] },
-  { key: "ai",      label: "AI / ML",          value: 4, ids: ["employee-monitoring", "pest-detection", "anemia-detection", "bearing-quality-inspection"] },
+  { key: "cv",      label: "Computer Vision", value: 4, ids: ["employee-monitoring", "pest-detection", "tumor-detection", "medical-ocr-system"] },
+  { key: "medical", label: "Medical AI",       value: 3, ids: ["anemia-detection", "tumor-detection", "medical-ocr-system"] },
+  { key: "data",    label: "Data & Analytics", value: 3, ids: ["atliq-hardware-360", "atliq-grand-hotel", "sales-finance-report"] },
+  { key: "ai",      label: "AI / ML",          value: 5, ids: ["employee-monitoring", "pest-detection", "anemia-detection", "tumor-detection", "medical-ocr-system"] },
 ];
 
 const SPARKLES = [
@@ -47,23 +47,23 @@ function ProjectCard({ project, globalIndex }: { project: (typeof projectsData)[
       />
 
       {/* DETAILS CARD (Behind initially) */}
-      <div className="card-details relative md:absolute w-full md:w-[48%] h-auto md:h-full rounded-[2rem] overflow-hidden
+      <div className="card-details relative md:absolute w-full md:w-[48%] h-auto md:h-full rounded-[2rem]
           bg-[#0D1E26] border border-accent-cyan/25 shadow-[0_4px_24px_rgba(0,0,0,0.45)] z-0
           flex flex-col justify-center px-6 md:px-10 py-8 opacity-100 md:opacity-0 scale-100 md:scale-95 order-2 md:order-none"
           data-slide={slideLeft ? "right" : "left"} 
       >
-        <div className="absolute inset-0 pointer-events-none">
+        {/* Large Number Circle - Top Left */}
+        <div className="absolute -top-4 -left-4 md:-top-6 md:-left-6 w-14 h-14 md:w-16 md:h-16 rounded-full bg-accent-cyan/20 border-2 border-accent-cyan/60 flex items-center justify-center text-accent-cyan font-mono text-xl md:text-2xl font-black z-50 shadow-[0_0_20px_rgba(0,242,254,0.4)] backdrop-blur-md">
+          {globalIndex + 1}
+        </div>
+
+        <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[2rem]">
           <div className="absolute top-1/2 -translate-y-1/2 left-1/4 w-64 h-64 bg-accent-cyan/8 blur-[80px] rounded-full" />
         </div>
-        <div className="relative z-10 flex flex-col gap-4">
-          <div className="flex items-center gap-3">
-            <span className="w-9 h-9 rounded-full bg-accent-cyan/15 border border-accent-cyan/50 flex items-center justify-center text-accent-cyan font-mono text-xs font-bold shrink-0">
-              {String(globalIndex + 1).padStart(2, "0")}
-            </span>
-            <div className="flex items-center gap-2 text-accent-cyan font-mono text-xs uppercase tracking-widest">
-              <Sparkles className="w-3.5 h-3.5" />
-              {project.id.replace(/-/g, " ")}
-            </div>
+        <div className="relative z-10 flex flex-col gap-4 mt-2">
+          <div className="flex items-center gap-2 text-accent-cyan font-mono text-xs uppercase tracking-widest">
+            <Sparkles className="w-3.5 h-3.5" />
+            {project.id.replace(/-/g, " ")}
           </div>
           <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight">
             {project.title}
@@ -93,26 +93,24 @@ function ProjectCard({ project, globalIndex }: { project: (typeof projectsData)[
       </div>
 
       {/* IMAGE CARD (Front initially) */}
-      <div className="card-image relative md:absolute w-full md:w-[48%] h-[250px] md:h-full rounded-[2rem] overflow-hidden
+      <div className="card-image relative md:absolute w-full md:w-[48%] h-[250px] md:h-full rounded-[2rem]
           bg-[#080E11] border border-accent-cyan/25 z-10 shadow-[0_24px_64px_rgba(0,242,254,0.2)] order-1 md:order-none"
           data-slide={slideLeft ? "left" : "right"} 
       >
-        <div className="absolute inset-0">
+
+        <div className="absolute inset-0 rounded-[2rem] overflow-hidden">
           <Image src={project.image} alt={project.title} fill
             sizes="(max-width: 768px) 100vw, 400px"
             className="object-contain" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#080E11]/90 via-[#080E11]/20 to-transparent pointer-events-none hidden md:block" />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-[#080E11]/90 via-[#080E11]/20 to-transparent pointer-events-none hidden md:block" />
 
         {/* Resting text on image */}
         <div className="resting-text absolute inset-0 hidden md:flex flex-col justify-end p-8 pointer-events-none">
           <p className="absolute top-6 right-8 flex items-center gap-1.5 text-white/35 text-[10px] font-mono uppercase tracking-widest">
             <span>Scroll to split</span><ArrowRight className="w-3 h-3" />
           </p>
-          <div className="flex items-center gap-3 mb-3">
-            <span className="w-9 h-9 rounded-full bg-accent-cyan/10 border border-accent-cyan/40 flex items-center justify-center text-accent-cyan font-mono text-xs font-bold shrink-0">
-              {String(globalIndex + 1).padStart(2, "0")}
-            </span>
+          <div className="flex items-center gap-3 mb-3 mt-4">
             <span className="text-accent-cyan font-mono text-xs uppercase tracking-widest">{project.id.replace(/-/g, " ")}</span>
           </div>
           <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight">{project.title}</h2>

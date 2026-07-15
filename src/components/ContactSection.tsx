@@ -146,13 +146,14 @@ export function ContactSection() {
               <motion.button 
                 type="submit" 
                 disabled={status === 'loading'}
-                animate={status === 'loading' ? 'loading' : 'idle'}
+                animate={status === 'loading' ? 'loading' : status === 'success' ? 'success' : 'idle'}
                 variants={{
                   idle: { backgroundColor: "#0ea5e9" }, // Sky Blue / Cyan
                   loading: { backgroundColor: "#8b5cf6" }, // Rich Mauve / Purple
+                  success: { backgroundColor: "#10b981" }, // Emerald Green
                 }}
                 transition={{ duration: 0.3 }}
-                className="btn-17 relative w-full h-14 rounded-full flex items-center justify-center hover:cursor-pointer hover:shadow-[0_0_20px_rgba(14,165,233,0.5)] transition-shadow duration-300 outline-none overflow-hidden mt-8"
+                className={`btn-17 relative w-full h-14 rounded-full flex items-center justify-center hover:cursor-pointer transition-shadow duration-300 outline-none overflow-hidden mt-8 ${status === 'success' ? 'shadow-[0_0_20px_rgba(16,185,129,0.5)]' : 'hover:shadow-[0_0_20px_rgba(14,165,233,0.5)]'}`}
                 style={{ '--btn-fill': '#11222C', '--btn-speed': '0.35s', '--btn-skew': '-0.25' } as React.CSSProperties}
               >
                 {/* State 1 & 3: Crisp White Uppercase Text */}
@@ -160,14 +161,17 @@ export function ContactSection() {
                   initial={false}
                   animate={{ 
                     opacity: status === 'loading' ? 0 : 1, 
-                    scale: status === 'loading' ? 0.8 : 1,
+                    scale: status === 'loading' ? 0.8 : status === 'success' ? [1, 1.15, 1] : 1,
                     y: status === 'loading' ? -20 : 0
                   }}
-                  transition={{ duration: 0.25 }}
+                  transition={{ 
+                    duration: 0.25,
+                    scale: { duration: 0.5, ease: "easeInOut", times: [0, 0.5, 1] }
+                  }}
                   className="absolute text-white font-bold font-sans uppercase tracking-widest text-sm text-container w-full h-full flex items-center justify-center"
                 >
-                  <span className="text flex items-center">
-                    {status === 'success' ? 'Message Sent!' : status === 'error' ? 'Failed to send' : 'Send Message'}
+                  <span className={`text flex items-center ${status === 'success' ? 'font-extrabold text-base tracking-[0.2em]' : ''}`}>
+                    {status === 'success' ? 'SENDED! THANK YOU' : status === 'error' ? 'Failed to send' : 'Send Message'}
                   </span>
                 </motion.span>
                 

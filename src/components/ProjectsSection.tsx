@@ -15,39 +15,39 @@ if (typeof window !== "undefined") {
 
 export const projectsData = [
   {
+    id: "anemia-detection",
+    title: "Non-Invasive Anemia Detection",
+    problem: "Need for clinically interpretable, non-invasive diagnostic classification to replace traditional blood tests.",
+    tech: ["U-Net", "ViT-B/16", "YOLOv8", "Streamlit", "Python"],
+    image: "/images/proj_anemia.png",
+  },
+  {
+    id: "tumor-detection",
+    title: "Tumor Localization on WSI",
+    problem: "Computational pathology system for tumor vs non-tumor classification and localization in Whole Slide Images without pixel-level annotations.",
+    tech: ["UNet2", "CLAM", "K-Means", "QuPath", "Python"],
+    image: "/images/proj_tumor.png",
+  },
+  {
+    id: "medical-ocr-system",
+    title: "Medical Packaging OCR System",
+    problem: "Automating manual inspection of medicine boxes to accurately extract medicine name, expiry date, batch number, MRP, and barcodes.",
+    tech: ["Python", "YOLOv8", "PaddleOCR", "FastAPI", "Streamlit"],
+    image: "/images/proj_medical_ocr.png",
+  },
+  {
     id: "employee-monitoring",
     title: "Employee Monitoring System",
     problem: "Manual attendance tracking across large corporate facilities is inaccurate and labor-intensive.",
-    tech: ["OpenCV", "PyTorch", "YOLOv8", "FaceNet"],
+    tech: ["OpenCV", "PyTorch", "YOLOv8", "FaceNet", "Python"],
     image: "/images/proj_employee.png",
   },
   {
     id: "pest-detection",
     title: "Pest Detection in Agriculture",
     problem: "Late detection of crop pests leads to significant agricultural losses and non-sustainable farming practices.",
-    tech: ["CNN", "TensorFlow", "Deep Learning"],
+    tech: ["CNN", "TensorFlow", "Deep Learning", "Python"],
     image: "/images/pest_detection.png",
-  },
-  {
-    id: "anemia-detection",
-    title: "Non-Invasive Anemia Detection",
-    problem: "Need for clinically interpretable, non-invasive diagnostic classification to replace traditional blood tests.",
-    tech: ["U-Net", "ViT-B/16", "YOLOv8", "Streamlit"],
-    image: "/images/proj_anemia.png",
-  },
-  {
-    id: "bearing-quality-inspection",
-    title: "Automated Bearing Quality Inspection",
-    problem: "Automated quality control system for manufacturing using computer vision to inspect bearing defects in real-time.",
-    tech: ["Python", "YOLO", "Computer Vision"],
-    image: "/images/proj_bearing.png",
-  },
-  {
-    id: "atliq-grand-hotel",
-    title: "AtliQ Grand Hotel Data Analysis",
-    problem: "Data-driven analysis of hotel revenue management to optimize occupancy rates and boost overall hospitality profits.",
-    tech: ["Python", "Pandas", "Data Analytics"],
-    image: "/images/proj_hotel.png",
   },
   {
     id: "atliq-hardware-360",
@@ -55,6 +55,13 @@ export const projectsData = [
     problem: "Comprehensive 360-degree business intelligence dashboard tracking cross-functional metrics across sales, marketing, and finance.",
     tech: ["Power BI", "DAX", "Data Modeling"],
     image: "/images/proj_hardware.png",
+  },
+  {
+    id: "atliq-grand-hotel",
+    title: "AtliQ Grand Hotel Data Analysis",
+    problem: "Data-driven analysis of hotel revenue management to optimize occupancy rates and boost overall hospitality profits.",
+    tech: ["Python", "Pandas", "Data Analytics"],
+    image: "/images/proj_hotel.png",
   },
   {
     id: "sales-finance-report",

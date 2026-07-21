@@ -19,8 +19,8 @@ const educationDetails = [
 
 export function EducationSection() {
   return (
-    <section id="education" className="pt-12 md:pt-16 pb-24 relative bg-transparent">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="education" className="pt-12 md:pt-16 pb-24 relative bg-transparent overflow-hidden">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         <div className="mb-16">
           <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter">My <span className="text-gradient">Education</span></h2>

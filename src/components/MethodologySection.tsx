@@ -62,7 +62,7 @@ export function MethodologySection() {
 
   return (
     <section id="methodology" className="relative pt-24 md:pt-32 pb-12 md:pb-16 bg-transparent overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4 md:px-8">
+      <div className="max-w-6xl mx-auto px-4 md:px-8 relative z-10">
         
         <div className="text-center mb-24 md:mb-32 relative">
           <motion.div

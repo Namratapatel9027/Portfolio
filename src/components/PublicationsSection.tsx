@@ -64,7 +64,7 @@ const rightColVariants = {
 export function PublicationsSection() {
   return (
     <section id="publications" className="py-24 relative bg-transparent overflow-hidden">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         <div className="flex flex-col items-center text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-black text-white mb-6 uppercase tracking-tighter">Selected <span className="text-gradient">Publications</span></h2>

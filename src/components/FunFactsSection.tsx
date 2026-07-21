@@ -2,6 +2,8 @@
 
 import { motion } from "framer-motion";
 import { Coffee, Code, Award, Cpu } from "lucide-react";
+import { SparklesBackground } from "./SparklesBackground";
+import { ShootingStars } from "./ShootingStars";
 
 const funFacts = [
   {
@@ -32,8 +34,10 @@ const funFacts = [
 
 export function FunFactsSection() {
   return (
-    <section className="relative py-20 bg-transparent flex justify-center px-4">
-      <div className="w-full max-w-6xl">
+    <section id="fun-facts" className="relative py-20 bg-gradient-to-b from-[#000000] via-[#020408] to-[#050810] z-20 flex justify-center px-4 shadow-2xl overflow-hidden">
+      <SparklesBackground count={100} />
+      <ShootingStars count={3} />
+      <div className="w-full max-w-6xl relative z-10">
 
         <div className="text-center mb-16">
           <motion.h2

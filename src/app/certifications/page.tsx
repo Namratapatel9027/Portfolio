@@ -9,6 +9,8 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRouter } from "next/navigation";
+import { SparklesBackground } from "@/components/SparklesBackground";
+import { ShootingStars } from "@/components/ShootingStars";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -246,7 +248,9 @@ function CertificationsContent() {
 export default function CertificationsPage() {
   const router = useRouter();
   return (
-    <main className="relative min-h-screen bg-transparent overflow-x-hidden">
+    <main className="relative min-h-screen bg-gradient-to-b from-[#000000] via-[#020408] to-[#050810] z-20 overflow-x-hidden">
+      <SparklesBackground count={150} />
+      <ShootingStars count={3} direction="right-to-left" />
       {/* ── Header ── */}
       <section className="relative pt-28 pb-4 flex flex-col items-center text-center px-4">
         {/* Ambient glow */}

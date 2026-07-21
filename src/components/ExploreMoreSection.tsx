@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import { SectionHeading } from "./ui/SectionHeading";
 import Link from "next/link";
+import { SparklesBackground } from "./SparklesBackground";
+import { ShootingStars } from "./ShootingStars";
 
 const socialLinks = [
   {
@@ -42,8 +44,10 @@ const socialLinks = [
 
 export function ExploreMoreSection() {
   return (
-    <section id="explore" className="py-24 relative bg-transparent">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="explore" className="py-24 relative bg-gradient-to-b from-[#000000] via-[#020408] to-[#050810] z-20 shadow-2xl overflow-hidden">
+      <SparklesBackground count={100} />
+      <ShootingStars count={3} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <SectionHeading 
           title={<><span className="text-white">EXPLORE</span> <span className="text-gradient">MORE</span></>} 
           subtitle="Check out my videos, professional updates, and open-source contributions." 

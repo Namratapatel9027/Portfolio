@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform, useMotionTemplate } from "framer-motion";
 import { useRef } from "react";
-import { Sparkles } from "lucide-react";
+import { SparklesBackground } from "./SparklesBackground";
 
 export function AboutSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -26,7 +26,9 @@ export function AboutSection() {
   const filter = useMotionTemplate`blur(${blurVal}px)`;
 
   return (
-    <section id="about" ref={containerRef} className="relative h-[200vh] bg-transparent">
+    <section id="about" ref={containerRef} className="relative h-[200vh] bg-gradient-to-b from-[#000000] via-[#020408] to-[#050810] z-20 shadow-2xl">
+      <SparklesBackground count={150} />
+
       {/* Sticky wrapper locks the content in the center of the screen while scrolling */}
       <div className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden">
 

@@ -5,6 +5,8 @@ import { Award, ArrowRight, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { SectionHeading } from "./ui/SectionHeading";
+import { SparklesBackground } from "./SparklesBackground";
+import { ShootingStars } from "./ShootingStars";
 
 const certifications = [
   {
@@ -50,7 +52,9 @@ const previewCerts = certifications.slice(0, 4);
 
 export function CertificationsTeaser() {
   return (
-    <section id="certifications" className="py-24 relative bg-surface/20 overflow-hidden">
+    <section id="certifications" className="py-24 relative bg-gradient-to-b from-[#000000] via-[#020408] to-[#050810] z-20 shadow-2xl overflow-hidden">
+      <SparklesBackground count={100} />
+      <ShootingStars count={2} />
       {/* Ambient glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[300px] bg-accent-purple/8 blur-[140px] rounded-full pointer-events-none" />
 

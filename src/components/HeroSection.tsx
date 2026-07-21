@@ -216,8 +216,8 @@ export function HeroSection() {
           style={{ scale: textScale, y: yPos }}
           className="flex flex-col items-center w-full mt-20"
         >
-          {/* Title / Preloader Text (mix-blend-difference applied here so only the title interacts with fluid) */}
-          <div className="flex flex-col items-center justify-center relative h-[250px] sm:h-[300px] w-full mix-blend-difference">
+          {/* Title / Preloader Text */}
+          <div className="flex flex-col items-center justify-center relative h-[250px] sm:h-[300px] w-full z-20">
             <AnimatePresence mode="wait">
               {introStage === "flashing" && currentLetterIndex < LETTERS.length ? (
                 <motion.h1
@@ -304,14 +304,14 @@ export function HeroSection() {
                   exit={{ rotateX: -90, opacity: 0 }}
                   transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
                   style={{ transformOrigin: "center top", backfaceVisibility: "hidden" }}
-                  className="text-2xl sm:text-4xl font-bold text-gradient tracking-wide uppercase whitespace-nowrap"
+                  className="text-xl sm:text-3xl md:text-4xl font-bold text-gradient tracking-wide uppercase text-center px-4 w-full"
                 >
                   {ROLES[roleIndex]}
                 </motion.h2>
               </AnimatePresence>
             </div>
 
-            <p className="text-text-secondary text-lg sm:text-xl max-w-2xl leading-relaxed mt-4">
+            <p className="text-text-secondary text-sm sm:text-lg md:text-xl max-w-2xl leading-relaxed mt-4 px-4 text-center">
               Building production-grade deep learning systems for medical imaging and industrial automation. Specializing in <span className="text-white font-medium">computer vision, CNNs,</span> and <span className="text-white font-medium">Vision Transformers</span>.
             </p>
           </motion.div>
@@ -324,7 +324,7 @@ export function HeroSection() {
             y: introStage === "complete" ? 0 : 30
           }}
           transition={{ duration: 1, delay: 0.5 }}
-          className="mt-12 flex flex-wrap justify-center items-center gap-6 pointer-events-auto"
+          className="mt-8 sm:mt-12 flex flex-col sm:flex-row flex-wrap justify-center items-center gap-4 sm:gap-6 pointer-events-auto w-full px-4"
         >
           <HeroButton
             href="/projects"

@@ -8,6 +8,7 @@ import Link from "next/link";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SparklesBackground } from "./SparklesBackground";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -194,8 +195,9 @@ export function ProjectsSection() {
   }, { scope: containerRef });
 
   return (
-    <section id="projects" className="relative bg-transparent">
-      <div ref={containerRef} className="py-16 md:py-20 w-full min-h-screen flex flex-col justify-center relative overflow-hidden z-10">
+    <section id="projects" className="relative bg-gradient-to-b from-[#000000] via-[#020408] to-[#050810] z-20 shadow-2xl overflow-hidden">
+      <SparklesBackground count={100} />
+      <div ref={containerRef} className="py-16 md:py-20 w-full min-h-screen flex flex-col justify-center relative z-10">
 
         <div className="relative z-10 w-full h-full flex flex-col justify-center">
           {/* Intro Heading */}

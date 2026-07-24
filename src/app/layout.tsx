@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
 import { Outfit, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { CustomCursor } from "@/components/CustomCursor";
+import SplashCursor from "@/components/SplashCursor";
 import { MeshBackground } from "@/components/MeshBackground";
 import { SmoothScroller } from "@/components/SmoothScroller";
 
 const outfitFont = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
+  preload: false,
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -33,7 +35,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col cursor-none text-base overflow-x-clip bg-background" suppressHydrationWarning>
         <SmoothScroller>
           <MeshBackground />
-          <CustomCursor />
+          <SplashCursor />
           {children}
         </SmoothScroller>
       </body>

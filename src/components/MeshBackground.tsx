@@ -5,10 +5,10 @@ import { motion } from "framer-motion";
 export const MeshBackground = () => {
   return (
     <div className="fixed inset-0 z-[-1] overflow-hidden bg-background">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent-cyan/10 via-background to-background pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-accent-mint/10 via-background to-background pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent-cyan/8 via-background to-background pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-accent-mint/8 via-background to-background pointer-events-none" />
       <motion.div
-        className="absolute top-1/4 left-1/4 w-[40vw] h-[40vw] bg-accent-cyan/5 rounded-full blur-[100px]"
+        className="absolute top-1/4 left-1/4 w-[40vw] h-[40vw] bg-accent-cyan/3 rounded-full blur-[100px]"
         animate={{
           scale: [1, 1.2, 1],
           opacity: [0.3, 0.5, 0.3],
@@ -22,7 +22,7 @@ export const MeshBackground = () => {
         }}
       />
       <motion.div
-        className="absolute bottom-1/4 right-1/4 w-[50vw] h-[50vw] bg-accent-mint/5 rounded-full blur-[120px]"
+        className="absolute bottom-1/4 right-1/4 w-[50vw] h-[50vw] bg-accent-mint/3 rounded-full blur-[120px]"
         animate={{
           scale: [1, 1.3, 1],
           opacity: [0.2, 0.4, 0.2],

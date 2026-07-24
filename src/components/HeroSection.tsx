@@ -7,6 +7,7 @@ import { useEffect, useState, useRef } from "react";
 import { projectsData } from "./ProjectsSection";
 import { experiences } from "./ExperienceTimeline";
 import { publications } from "./PublicationsSection";
+import Galaxy from "./Galaxy";
 
 const FULL_NAME = "NAMRATA";
 const LETTERS = FULL_NAME.split("");
@@ -100,6 +101,11 @@ const ROLES = [
   "Machine Learning Engineer",
 ];
 
+function seededRandom(seed: number) {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
 export function HeroSection() {
   const [visitorCount, setVisitorCount] = useState<number | null>(null);
   const [roleIndex, setRoleIndex] = useState(0);
@@ -125,66 +131,13 @@ export function HeroSection() {
   }, []);
 
   // Preloader sequence state
-  const [introStage, setIntroStage] = useState<"flashing" | "merged" | "complete">("flashing");
-  const [currentLetterIndex, setCurrentLetterIndex] = useState(0);
-
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [introStage] = useState<"flashing" | "merged" | "complete">("complete");
+  const [currentLetterIndex] = useState(LETTERS.length);
+  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
-    let fluidInstance: any;
-    if (canvasRef.current) {
-      import("webgl-fluid-enhanced").then(({ default: WebGLFluidEnhanced }) => {
-        fluidInstance = new WebGLFluidEnhanced(canvasRef.current as HTMLCanvasElement);
-        fluidInstance.setConfig({
-          simResolution: 128,
-          dyeResolution: 1024,
-          densityDissipation: 3,
-          velocityDissipation: 0.98,
-          pressure: 0.8,
-          curl: 20,
-          splatRadius: 0.2,
-          shading: false,
-          colorful: false,
-          colorPalette: ["#ffffff"],
-          hover: true,
-          backgroundColor: "transparent",
-          transparent: true,
-          bloom: true,
-          bloomIterations: 8,
-          bloomResolution: 256,
-          bloomIntensity: 0.5,
-          bloomThreshold: 0.6,
-          bloomSoftKnee: 0.7,
-          sunrays: false,
-        });
-        fluidInstance.start();
-      });
-    }
-
-    return () => {
-      if (fluidInstance) {
-        fluidInstance.stop();
-      }
-    };
+    setHasMounted(true);
   }, []);
-
-  useEffect(() => {
-    if (introStage === "flashing") {
-      if (currentLetterIndex < LETTERS.length) {
-        const timer = setTimeout(() => {
-          setCurrentLetterIndex(prev => prev + 1);
-        }, 300); // Slower flash speed
-        return () => clearTimeout(timer);
-      } else {
-        setIntroStage("merged");
-      }
-    } else if (introStage === "merged") {
-      const timer = setTimeout(() => {
-        setIntroStage("complete");
-      }, 1500); // Hold full name for 1.5s
-      return () => clearTimeout(timer);
-    }
-  }, [currentLetterIndex, introStage]);
 
   const { scrollY } = useScroll();
 
@@ -194,7 +147,7 @@ export function HeroSection() {
   const yPos = useTransform(scrollY, [0, 300], [0, 100]);
 
   return (
-    <section id="home" className="sticky top-0 h-screen flex items-center justify-center overflow-hidden bg-transparent">
+    <section id="home" className="sticky top-0 h-screen flex items-center justify-center overflow-hidden bg-black z-0">
 
       {/* Absolute Black Overlay for Preloader */}
       <motion.div
@@ -204,9 +157,22 @@ export function HeroSection() {
         className="fixed inset-0 z-10 bg-black pointer-events-none"
       />
 
-      {/* Fluid Simulation Canvas */}
+      {/* Galaxy Background */}
       <motion.div style={{ opacity: textOpacity }} className="absolute inset-0 z-0 overflow-hidden">
-        <canvas ref={canvasRef} className="w-full h-full" />
+        <Galaxy 
+          mouseRepulsion
+          mouseInteraction
+          density={1}
+          glowIntensity={0.3}
+          saturation={0}
+          hueShift={140}
+          twinkleIntensity={0.3}
+          rotationSpeed={0.1}
+          repulsionStrength={2}
+          autoCenterRepulsion={0}
+          starSpeed={0.5}
+          speed={1}
+        />
       </motion.div>
 
       {/* Main Content */}
@@ -230,7 +196,7 @@ export function HeroSection() {
                 >
                   {LETTERS[currentLetterIndex]}
                 </motion.h1>
-              ) : introStage === "merged" || introStage === "complete" ? (
+              ) : (introStage === "merged" || introStage === "complete") && hasMounted ? (
                 <motion.div
                   key="full-name"
                   className="flex flex-col -space-y-2 sm:-space-y-1 items-center justify-center z-50 pointer-events-none mt-8 sm:mt-12"
@@ -244,36 +210,43 @@ export function HeroSection() {
                         key={word}
                         className="flex"
                       >
-                        {word.split("").map((letter, i) => (
-                          <motion.span
-                            key={i}
-                            initial={{
-                              opacity: 0,
-                              x: xStart + (Math.random() - 0.5) * 400,
-                              y: yStart + (Math.random() - 0.5) * 400,
-                              rotate: (Math.random() - 0.5) * 90,
-                              scale: 2,
-                              filter: "blur(20px)"
-                            }}
-                            animate={{
-                              opacity: 1,
-                              x: 0,
-                              y: 0,
-                              rotate: 0,
-                              scale: 1,
-                              filter: "blur(0px)"
-                            }}
-                            transition={{
-                              duration: 0.8,
-                              delay: i * 0.05 + wIdx * 0.2,
-                              type: "spring",
-                              bounce: 0.4
-                            }}
-                            className="text-[13vw] sm:text-[63px] lg:text-[112px] font-black tracking-tighter leading-none text-white uppercase inline-block drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
-                          >
-                            {letter}
-                          </motion.span>
-                        ))}
+                        {word.split("").map((letter, i) => {
+                          const seed = wIdx * 100 + i * 17;
+                          const rX = seededRandom(seed + 1);
+                          const rY = seededRandom(seed + 2);
+                          const rR = seededRandom(seed + 3);
+
+                          return (
+                            <motion.span
+                              key={i}
+                              initial={{
+                                opacity: 0,
+                                x: xStart + (rX - 0.5) * 400,
+                                y: yStart + (rY - 0.5) * 400,
+                                rotate: (rR - 0.5) * 90,
+                                scale: 2,
+                                filter: "blur(20px)"
+                              }}
+                              animate={{
+                                opacity: 1,
+                                x: 0,
+                                y: 0,
+                                rotate: 0,
+                                scale: 1,
+                                filter: "blur(0px)"
+                              }}
+                              transition={{
+                                duration: 0.8,
+                                delay: i * 0.05 + wIdx * 0.2,
+                                type: "spring",
+                                bounce: 0.4
+                              }}
+                              className="text-[13vw] sm:text-[63px] lg:text-[112px] font-black tracking-tighter leading-none text-white uppercase inline-block drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+                            >
+                              {letter}
+                            </motion.span>
+                          );
+                        })}
                       </motion.div>
                     );
                   })}

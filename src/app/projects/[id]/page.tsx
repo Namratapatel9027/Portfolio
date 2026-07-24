@@ -41,14 +41,16 @@ const projectsData: Record<string, any> = {
     demo: "#"
   },
   "employee-monitoring": {
-    title: "Employee Monitoring System",
+    title: "Real Time Face_Recognition Employee Attendance System",
     subtitle: "Edge deployment of YOLOv8 for smart traffic monitoring.",
     shortDesc: "A highly efficient object detection system designed to monitor and classify traffic in real-time, optimized for deployment on resource-constrained edge devices.",
     longDesc: "This project involved training a custom YOLOv8 (You Only Look Once) architecture on a large dataset of urban traffic images. The primary challenge was balancing detection accuracy with inference speed to allow for real-time processing on edge devices like NVIDIA Jetson Nano.\n\nThe system is capable of detecting and tracking various vehicle types, pedestrians, and cyclists under varying lighting and weather conditions. Using TensorRT for optimization, the model achieved a 40% increase in inference speed compared to the baseline PyTorch model without a significant drop in mean Average Precision (mAP).",
     tech: ["PyTorch", "OpenSlide", "ResNet", "FastAPI"],
     image: "/images/chatbot.png",
-    github: "#",
-    demo: "#"
+    github: "https://github.com/Namratapatel9027/Real_Time_Face_Recognition_Employee_Attendance_System",
+    demo: "#",
+    hideVideo: true,
+    hideDemo: true
   },
   "pest-detection": {
     title: "Precision Agriculture: ML and DL-Based Detection of Pests",
@@ -63,31 +65,31 @@ const projectsData: Record<string, any> = {
     hideDemo: true
   },
   "medical-ocr-system": {
-    title: "Medical Packaging OCR System",
+    title: "Medical Packaging & OCR System",
     subtitle: "Automated OCR pipeline for pharmaceutical packaging inspection.",
     shortDesc: "An end-to-end computer vision and OCR system designed to detect and extract key fields like expiry dates and MRP from medical packages.",
     longDesc: "This project automates the inspection of medical packaging on production lines. A custom YOLOv8 model detects key regions of interest such as medicine name, expiry date, batch number, MRP, and barcodes from images of medicine boxes and blister packs. These regions are cropped and preprocessed using OpenCV to enhance readability.\n\nThe cleaned images are passed to PaddleOCR for text extraction. Post-processing with Python and regular expressions standardizes dates, validates prices, and corrects common OCR errors. The structured results are returned as JSON through a FastAPI backend, and the entire pipeline is wrapped in a Streamlit interface for easy user interaction and deployed using Docker.",
     tech: ["YOLOv8", "OpenCV", "PaddleOCR", "FastAPI", "Streamlit", "Docker"],
     image: "/images/proj_medical_ocr.png",
-    github: "#",
+    github: "https://github.com/Namratapatel9027/Medical_Packaging_Inspection_And_OCR_System",
     demo: "#",
     hideVideo: true,
     hideDemo: true
   },
   "tumor-detection": {
-    title: "Tumor Localization Project",
+    title: "WSI Tumor Localization Using UNet2 & CLAM Attention Modeling ",
     subtitle: "Computational Pathology — Tumor vs Non-Tumor classification + localization",
     shortDesc: "A Multiple Instance Learning (MIL) approach to localize tumor regions in Whole Slide Images without pixel-level annotations, achieving over 95% accuracy.",
     longDesc: "This project addresses the scale problem in computational pathology, where gigapixel Whole Slide Images (WSI) cannot fit into GPU memory and pixel-level annotations are clinically expensive. I built an end-to-end pipeline that extracts 128x128 patches at 2.5x magnification and processes them through a UNet2-based feature extractor.\n\nThe core model is based on CLAM (Clustering-constrained Attention Multiple Instance Learning). It treats each slide as a bag of instances and learns attention scores to identify tumor-relevant patches from only slide-level labels. Finally, the attention maps are exported as GeoJSON overlays for visualization in QuPath, bridging AI reasoning directly with clinical workflows.",
     tech: ["UNet2", "CLAM", "K-Means", "QuPath", "OpenCV"],
     image: "/images/proj_tumor.png",
-    github: "#",
+    github: "https://github.com/Namratapatel9027/WSI_Tumor_Localization_Using_UNet2_Feature_Extraction_and_CLAM_Attention_Modeling",
     demo: "#",
     hideVideo: true,
     hideDemo: true
   },
   "anemia-detection": {
-    title: "Non-Invasive Anemia Detection",
+    title: "Non Invasive Anemia Detection Using ViT",
     subtitle: "A deep learning approach for non-invasive anemia diagnosis using Vision Transformers.",
     shortDesc: "A complete computer vision pipeline utilizing YOLOv8 for automated region-of-interest cropping and Vision Transformers (ViT) for accurate, non-invasive detection of anemia.",
     longDesc: "Traditional anemia diagnosis relies on invasive blood tests. This project proposes a non-invasive diagnostic alternative by analyzing images of the palpebral conjunctiva (the inner lining of the eyelid). The system leverages an advanced two-stage deep learning pipeline.\n\nFirst, a YOLOv8 object detection model automatically identifies and crops the specific region of interest from raw patient images, ensuring standardized inputs. The cropped images are then processed by a Vision Transformer (ViT-B/16) architecture, which utilizes self-attention mechanisms to analyze the subtle pallor and color variations indicative of hemoglobin levels. The solution provides an efficient, accessible, and pain-free screening method that can be deployed via Streamlit in resource-constrained medical environments.",
@@ -170,7 +172,7 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{project.title}</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 break-words">{project.title}</h1>
           <p className="text-xl text-text-secondary max-w-3xl mx-auto">{project.subtitle}</p>
         </motion.div>
 

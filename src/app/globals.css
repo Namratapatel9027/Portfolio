@@ -112,8 +112,8 @@ html {
   height: 100%;
   border-radius: 24px;
   color: #ffffff;
-  background: rgba(17, 34, 44, 0.9); /* Publication card color */
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(17, 34, 44, 0.8); /* Match fun fact card */
+  border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(4px);
   transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
   z-index: 10;
@@ -127,11 +127,11 @@ html {
   width: 90%;
   height: 90%;
   transform: translate(-50%);
-  background: rgba(17, 34, 44, 0.7);
+  background: rgba(17, 34, 44, 0.6);
   z-index: -1;
   transform-origin: bottom;
   border-radius: inherit;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
@@ -142,7 +142,8 @@ html {
 }
 
 .explore-card:hover .explore-content {
-  background: rgba(17, 34, 44, 1);
+  background: rgba(17, 34, 44, 0.9);
+  border: 1px solid rgba(0, 242, 254, 0.4);
 }
 
 .explore-card:hover .explore-content::before {
@@ -171,13 +172,11 @@ html {
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  min-width: 220px !important; /* Increase width for every button */
-  border: 1px solid rgba(255, 255, 255, 0.15) !important; /* transparent-white border */
+  min-width: 220px !important;
 }
 
 .btn-17:hover {
-  border-color: #00F2FE !important; /* theme blue hover border */
-  box-shadow: 0 0 20px rgba(0, 242, 254, 0.2) !important;
+  
 }
 
 .btn-17 .text-container {

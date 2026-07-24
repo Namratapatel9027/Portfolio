@@ -1,6 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { SparklesBackground } from "./SparklesBackground";
+import { ShootingStars } from "./ShootingStars";
 
 const educationDetails = [
   {
@@ -19,7 +21,9 @@ const educationDetails = [
 
 export function EducationSection() {
   return (
-    <section id="education" className="pt-12 md:pt-16 pb-24 relative bg-transparent overflow-hidden">
+    <section id="education" className="py-24 relative bg-gradient-to-b from-[#000000] via-[#020408] to-[#050810] z-20 shadow-2xl overflow-hidden">
+      <SparklesBackground count={100} />
+      <ShootingStars count={3} />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         <div className="mb-16">

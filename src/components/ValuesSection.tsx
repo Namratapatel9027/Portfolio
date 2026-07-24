@@ -30,9 +30,9 @@ export function ValuesSection() {
   return (
     <section className="relative py-20 bg-transparent flex justify-center px-4">
       <div className="w-full max-w-5xl">
-        
+
         <div className="text-center mb-16">
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, margin: "-50px" }}
@@ -55,7 +55,7 @@ export function ValuesSection() {
             >
               {/* Sweeping bottom line on hover */}
               <div className="absolute bottom-0 left-0 h-[2px] w-full bg-gradient-to-r from-accent-cyan via-accent-mint to-transparent -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-out z-20" />
-              
+
               {/* Background Highlight on hover */}
               <div className="absolute inset-0 bg-gradient-to-r from-accent-cyan/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0 pointer-events-none" />
 
@@ -73,7 +73,7 @@ export function ValuesSection() {
                   {value.description}
                 </p>
               </div>
-              
+
               {/* Decorative Number */}
               <div className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-[80px] md:text-[120px] font-black text-white/[0.02] group-hover:text-accent-cyan/[0.05] group-hover:-translate-x-4 transition-all duration-700 pointer-events-none z-0">
                 0{index + 1}

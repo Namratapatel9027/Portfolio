@@ -17,28 +17,28 @@ if (typeof window !== "undefined") {
 export const projectsData = [
   {
     id: "anemia-detection",
-    title: "Non-Invasive Anemia Detection",
+    title: "Non Invasive Anemia Detection Using ViT",
     problem: "Need for clinically interpretable, non-invasive diagnostic classification to replace traditional blood tests.",
     tech: ["U-Net", "ViT-B/16", "YOLOv8", "Streamlit", "Python"],
     image: "/images/proj_anemia.png",
   },
   {
     id: "tumor-detection",
-    title: "Tumor Localization on WSI",
+    title: "WSI Tumor Localization Using UNet2 & CLAM Attention Modeling ",
     problem: "Computational pathology system for tumor vs non-tumor classification and localization in Whole Slide Images without pixel-level annotations.",
     tech: ["UNet2", "CLAM", "K-Means", "QuPath", "Python"],
     image: "/images/proj_tumor.png",
   },
   {
     id: "medical-ocr-system",
-    title: "Medical Packaging OCR System",
+    title: "Medical Packaging & OCR System",
     problem: "Automating manual inspection of medicine boxes to accurately extract medicine name, expiry date, batch number, MRP, and barcodes.",
     tech: ["Python", "YOLOv8", "PaddleOCR", "FastAPI", "Streamlit"],
     image: "/images/proj_medical_ocr.png",
   },
   {
     id: "employee-monitoring",
-    title: "Employee Monitoring System",
+    title: "Real Time Face_Recognition Employee Attendance System",
     problem: "Manual attendance tracking across large corporate facilities is inaccurate and labor-intensive.",
     tech: ["OpenCV", "PyTorch", "YOLOv8", "FaceNet", "Python"],
     image: "/images/proj_employee.png",
@@ -244,7 +244,7 @@ export function ProjectsSection() {
                     <span>{project.id.replace(/-/g, ' ')}</span>
                   </div>
 
-                  <h3 className="text-xl md:text-3xl font-black text-white mb-2 md:mb-4 leading-tight tracking-tight">
+                  <h3 className="text-xl md:text-3xl font-black text-white mb-2 md:mb-4 leading-tight tracking-tight break-words">
                     {project.title}
                   </h3>
 
@@ -265,8 +265,8 @@ export function ProjectsSection() {
                     <Link
                       href={`/projects/${project.id}`}
                       onClick={() => sessionStorage.setItem(`scroll_${window.location.pathname}`, window.scrollY.toString())}
-                      className="btn-17 group/btn px-8 py-3 bg-[#11222C] border border-accent-mint/50 text-white font-bold shadow-[0_0_20px_rgba(79,172,254,0.1)]"
-                      style={{ '--btn-fill': '#00F2FE', '--btn-speed': '0.35s', '--btn-skew': '0.25' } as React.CSSProperties}
+                      className="btn-17 group/btn px-8 py-3 bg-white text-black hover:text-white font-bold shadow-lg transition-colors duration-300 border-none"
+                      style={{ '--btn-fill': '#000000', '--btn-speed': '0.35s', '--btn-skew': '0.25' } as React.CSSProperties}
                     >
                       <span className="text-container flex items-center justify-center">
                         <span className="text flex items-center text-sm">
@@ -327,7 +327,7 @@ export function ProjectsSection() {
                 <Link
                   href="/projects"
                   onClick={() => sessionStorage.setItem(`scroll_${window.location.pathname}`, window.scrollY.toString())}
-                  className="btn-17 group/cta px-10 py-4 font-bold text-base bg-white text-black hover:text-white shadow-[0_0_40px_rgba(255,255,255,0.2)] transition-colors duration-300"
+                  className="btn-17 group/cta px-10 py-4 font-bold text-base bg-white text-black hover:text-white shadow-[0_0_40px_rgba(255,255,255,0.2)] transition-colors duration-300 border-none"
                   style={{ '--btn-fill': '#000000', '--btn-speed': '0.45s', '--btn-skew': '-0.15' } as React.CSSProperties}
                 >
                   <span className="text-container flex items-center justify-center">

@@ -3,8 +3,7 @@
 import { motion } from "framer-motion";
 import { SectionHeading } from "./ui/SectionHeading";
 import Link from "next/link";
-import { SparklesBackground } from "./SparklesBackground";
-import { ShootingStars } from "./ShootingStars";
+
 
 const socialLinks = [
   {
@@ -44,42 +43,70 @@ const socialLinks = [
 
 export function ExploreMoreSection() {
   return (
-    <section id="explore" className="py-24 relative bg-gradient-to-b from-[#000000] via-[#020408] to-[#050810] z-20 shadow-2xl overflow-hidden">
-      <SparklesBackground count={100} />
-      <ShootingStars count={3} />
+    <section id="explore" className="py-24 relative bg-transparent z-20 shadow-2xl overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <SectionHeading 
           title={<><span className="text-white">EXPLORE</span> <span className="text-gradient">MORE</span></>} 
           subtitle="Check out my videos, professional updates, and open-source contributions." 
         />
 
-        <div className="flex flex-wrap justify-center gap-8 mt-12">
-          {socialLinks.map((link, index) => (
-            <motion.div
-              key={link.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.1 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Link 
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="explore-card w-56 h-56 group shadow-[0_10px_30px_rgba(0,0,0,0.3)]"
-              >
-                <div className="explore-content">
-                  <div className={`text-text-secondary transition-colors duration-300 ${link.color} mb-6`}>
-                    {link.icon}
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.3 }}
+          className="flex justify-center items-center mt-16 w-full overflow-hidden py-16 min-h-[400px]"
+        >
+          <div className="flex justify-center items-center gap-4 sm:gap-8 w-full max-w-5xl">
+            {socialLinks.map((link, index) => {
+              // Calculate responsive overlap for the initial state
+              const xOffset = index === 0 ? "110%" : index === 2 ? "-110%" : "0%";
+              const initRotate = index === 0 ? -15 : index === 1 ? 5 : 25;
+              const zIndex = index === 0 ? 'z-10' : index === 1 ? 'z-30' : 'z-20'; // Center card highest
+
+              return (
+                <motion.a 
+                  key={link.name}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variants={{
+                    hidden: { 
+                      opacity: 0, 
+                      rotate: initRotate, 
+                      x: xOffset, 
+                      y: 50,
+                      scale: 0.8
+                    },
+                    visible: { 
+                      opacity: 1, 
+                      rotate: 0, 
+                      x: "0%", 
+                      y: 0,
+                      scale: 1,
+                      transition: { 
+                        type: "spring",
+                        damping: 15,
+                        stiffness: 100,
+                        duration: 0.8 
+                      }
+                    }
+                  }}
+                  whileHover={{ y: -16 }}
+                  className={`explore-card w-36 h-36 sm:w-56 sm:h-56 lg:w-64 lg:h-64 group shadow-[0_10px_30px_rgba(0,0,0,0.3)] ${zIndex}`}
+                >
+                  <div className="explore-content">
+                    <div className={`text-text-secondary transition-colors duration-300 ${link.color} mb-4 sm:mb-6`}>
+                      {link.icon}
+                    </div>
+                    <span className="text-lg sm:text-xl font-bold text-white tracking-wide text-center">
+                      {link.name}
+                    </span>
                   </div>
-                  <span className="text-xl font-bold text-white tracking-wide">
-                    {link.name}
-                  </span>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
+                </motion.a>
+              );
+            })}
+          </div>
+        </motion.div>
       </div>
     </section>
   );

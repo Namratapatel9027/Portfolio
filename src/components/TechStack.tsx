@@ -32,7 +32,7 @@ const elements = [
   { id: 19, symbol: "Cv", name: "OpenCV", cat: "Computer Vision", bg: "bg-accent-cyan/10", border: "border-accent-cyan/30", text: "text-accent-cyan", shadow: "hover:shadow-[0_0_30px_rgba(6,182,212,0.4)]", logo: "https://cdn.simpleicons.org/opencv" },
   { id: 20, symbol: "Y8", name: "YOLOv8", cat: "Computer Vision", bg: "bg-accent-cyan/10", border: "border-accent-cyan/30", text: "text-accent-cyan", shadow: "hover:shadow-[0_0_30px_rgba(6,182,212,0.4)]", logo: "https://cdn.simpleicons.org/roboflow" },
   { id: 21, symbol: "Un", name: "U-Net", cat: "Computer Vision", bg: "bg-accent-cyan/10", border: "border-accent-cyan/30", text: "text-accent-cyan", shadow: "hover:shadow-[0_0_30px_rgba(6,182,212,0.4)]", logo: "https://cdn.simpleicons.org/pytorch" },
-  { id: 22, symbol: "Ws", name: "WSI Analysis", cat: "Computer Vision", bg: "bg-accent-cyan/10", border: "border-accent-cyan/30", text: "text-accent-cyan", shadow: "hover:shadow-[0_0_30px_rgba(6,182,212,0.4)]", logo: "https://cdn.simpleicons.org/fastai/white" },
+  { id: 22, symbol: "Ws", name: "WSI Analysis", cat: "Computer Vision", bg: "bg-accent-cyan/10", border: "border-accent-cyan/30", text: "text-accent-cyan", shadow: "hover:shadow-[0_0_30px_rgba(6,182,212,0.4)]", logo: "https://cdn.simpleicons.org/fastai" },
   { id: 23, symbol: "Os", name: "OpenSlide", cat: "Computer Vision", bg: "bg-accent-cyan/10", border: "border-accent-cyan/30", text: "text-accent-cyan", shadow: "hover:shadow-[0_0_30px_rgba(6,182,212,0.4)]", logo: "https://cdn.simpleicons.org/scipy" },
 
   // Tools & MLOps (Blue)
@@ -48,9 +48,6 @@ export function TechStack() {
 
   return (
     <section id="tech-stack" className="py-32 relative bg-transparent overflow-hidden min-h-screen flex flex-col justify-center">
-
-      {/* Dynamic Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-accent-purple/5 via-background to-background pointer-events-none z-0" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
 

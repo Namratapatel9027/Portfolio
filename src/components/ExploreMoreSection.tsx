@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { SectionHeading } from "./ui/SectionHeading";
 import Link from "next/link";
+import LightRays from "./LightRays";
 
 
 const socialLinks = [
@@ -43,7 +44,21 @@ const socialLinks = [
 
 export function ExploreMoreSection() {
   return (
-    <section id="explore" className="py-24 relative bg-transparent z-20 shadow-2xl overflow-hidden">
+    <section id="explore" className="py-24 relative bg-gradient-to-b from-[#000000] via-[#020408] to-[#050810] z-20 shadow-2xl overflow-hidden">
+      {/* LightRays Background */}
+      <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
+        <LightRays
+          raysOrigin="top-center"
+          raysColor="#00ffff"
+          raysSpeed={1.5}
+          lightSpread={0.8}
+          rayLength={1.2}
+          followMouse={true}
+          mouseInfluence={0.1}
+          noiseAmount={0.1}
+          distortion={0.05}
+        />
+      </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <SectionHeading 
           title={<><span className="text-white">EXPLORE</span> <span className="text-gradient">MORE</span></>} 
